@@ -57,6 +57,40 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SW_QH_Pin GPIO_PIN_0
+#define SW_QH_GPIO_Port GPIOA
+#define SW_SH_LD_Pin GPIO_PIN_1
+#define SW_SH_LD_GPIO_Port GPIOA
+#define SW_CLK_Pin GPIO_PIN_4
+#define SW_CLK_GPIO_Port GPIOA
+#define ENCODER_Z_Pin GPIO_PIN_5
+#define ENCODER_Z_GPIO_Port GPIOA
+#define ENCODER_B_Pin GPIO_PIN_6
+#define ENCODER_B_GPIO_Port GPIOA
+#define ENCODER_A_Pin GPIO_PIN_7
+#define ENCODER_A_GPIO_Port GPIOA
+#define SIG_N2_Pin GPIO_PIN_0
+#define SIG_N2_GPIO_Port GPIOB
+#define SIG_P2_Pin GPIO_PIN_1
+#define SIG_P2_GPIO_Port GPIOB
+#define LED_POWER_Pin GPIO_PIN_8
+#define LED_POWER_GPIO_Port GPIOA
+#define PC_UART_TXD_Pin GPIO_PIN_9
+#define PC_UART_TXD_GPIO_Port GPIOA
+#define PC_UART_RXD_Pin GPIO_PIN_10
+#define PC_UART_RXD_GPIO_Port GPIOA
+#define SIG_P1_Pin GPIO_PIN_15
+#define SIG_P1_GPIO_Port GPIOA
+#define SIG_N1_Pin GPIO_PIN_3
+#define SIG_N1_GPIO_Port GPIOB
+#define SCK_7SEG_Pin GPIO_PIN_4
+#define SCK_7SEG_GPIO_Port GPIOB
+#define RCK_7SEG_Pin GPIO_PIN_5
+#define RCK_7SEG_GPIO_Port GPIOB
+#define SI_7SEG_Pin GPIO_PIN_6
+#define SI_7SEG_GPIO_Port GPIOB
+#define LED_UART_Pin GPIO_PIN_7
+#define LED_UART_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
