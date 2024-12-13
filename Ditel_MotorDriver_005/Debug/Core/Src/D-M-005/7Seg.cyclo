@@ -1,0 +1,4 @@
+../Core/Src/D-M-005/7Seg.c:13:6:_7SegInit	1
+../Core/Src/D-M-005/7Seg.c:26:6:_7SegDisplay	79
+../Core/Src/D-M-005/7Seg.c:130:6:_7SegReset	1
+../Core/Src/D-M-005/7Seg.c:135:6:__7Seg1byteDisplay	2

@@ -61,7 +61,19 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
+void Init_7Seg(){
+	_7SEG_SETTING Setting_7Seg;
 
+	Setting_7Seg.__7SegSi_GpioPort = _7SEG_SI_GPIO_Port;
+	Setting_7Seg.__7SegSi_Pin = _7SEG_SI_Pin;
+	Setting_7Seg.__7SegRck_GpioPort = _7SEG_RCK_GPIO_Port;
+	Setting_7Seg.__7SegRck_Pin = _7SEG_RCK_Pin;
+	Setting_7Seg.__7SegSck_GpioPort = _7SEG_SCK_GPIO_Port;
+	Setting_7Seg.__7SegSck_Pin = _7SEG_SCK_Pin;
+
+	_7SegInit(&Setting_7Seg);
+	_7SegReset();
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,7 +116,11 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
 
+  Init_7Seg(); //Init 7Seg
+
+  _7SegDisplay(0xAB, true);
   /* USER CODE END 2 */
 
   /* Infinite loop */
