@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -57,6 +59,44 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SW_QH_Pin GPIO_PIN_0
+#define SW_QH_GPIO_Port GPIOA
+#define SW_SH_LD_Pin GPIO_PIN_1
+#define SW_SH_LD_GPIO_Port GPIOA
+#define N_C__Pin GPIO_PIN_2
+#define N_C__GPIO_Port GPIOA
+#define UART_RX_Pin GPIO_PIN_3
+#define UART_RX_GPIO_Port GPIOA
+#define SW_CLK_Pin GPIO_PIN_4
+#define SW_CLK_GPIO_Port GPIOA
+#define ROTARY_ENCODER_Z_Pin GPIO_PIN_5
+#define ROTARY_ENCODER_Z_GPIO_Port GPIOA
+#define ROTARY_ENCODER_B_Pin GPIO_PIN_6
+#define ROTARY_ENCODER_B_GPIO_Port GPIOA
+#define ROTARY_ENCODER_A_Pin GPIO_PIN_7
+#define ROTARY_ENCODER_A_GPIO_Port GPIOA
+#define SIG_P2_Pin GPIO_PIN_1
+#define SIG_P2_GPIO_Port GPIOB
+#define LED_POWER_Pin GPIO_PIN_8
+#define LED_POWER_GPIO_Port GPIOA
+#define PC_UART_TXD_Pin GPIO_PIN_9
+#define PC_UART_TXD_GPIO_Port GPIOA
+#define PC_UART_RXD_Pin GPIO_PIN_10
+#define PC_UART_RXD_GPIO_Port GPIOA
+#define CAN_RXD_Pin GPIO_PIN_11
+#define CAN_RXD_GPIO_Port GPIOA
+#define CAN_TXD_Pin GPIO_PIN_12
+#define CAN_TXD_GPIO_Port GPIOA
+#define SIG_P1_Pin GPIO_PIN_15
+#define SIG_P1_GPIO_Port GPIOA
+#define _7SEG_SCK_Pin GPIO_PIN_4
+#define _7SEG_SCK_GPIO_Port GPIOB
+#define _7SEG_RCK_Pin GPIO_PIN_5
+#define _7SEG_RCK_GPIO_Port GPIOB
+#define _7SEG_SI_Pin GPIO_PIN_6
+#define _7SEG_SI_GPIO_Port GPIOB
+#define LED_UART_Pin GPIO_PIN_7
+#define LED_UART_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
