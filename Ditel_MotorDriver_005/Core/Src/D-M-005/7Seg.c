@@ -132,6 +132,47 @@ void _7SegReset(){
     __7Seg1byteDisplay(~(0b00000000));
 }
 
+void _7SegSetUpAnimation(_SETUP_STEP_FOR_7SEG __SetupStep){
+	switch (__SetupStep) {
+		case _SETUP_STEP_START_PROGRAM:
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			__7Seg1byteDisplay(__7SEG_ONLY_A_1Byte);
+			break;
+		case _SETUP_STEP_SETUP_MOTOR:
+			__7Seg1byteDisplay(__7SEG_ONLY_A_1Byte);
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			break;
+		case _SETUP_STEP_NULL1:
+			__7Seg1byteDisplay(__7SEG_ONLY_B_1Byte);
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			break;
+		case _SETUP_STEP_NULL2:
+			__7Seg1byteDisplay(__7SEG_ONLY_C_1Byte);
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			break;
+		case _SETUP_STEP_NULL3:
+			__7Seg1byteDisplay(__7SEG_ONLY_D_1Byte);
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			break;
+		case _SETUP_STEP_NULL4:
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			__7Seg1byteDisplay(__7SEG_ONLY_D_1Byte);
+			break;
+		case _SETUP_STEP_NULL5:
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			__7Seg1byteDisplay(__7SEG_ONLY_E_1Byte);
+			break;
+		case _SETUP_STEP_NULL6:
+			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
+			__7Seg1byteDisplay(__7SEG_ONLY_F_1Byte);
+			break;
+		case _SETUP_STEP_FINISH:
+			__7Seg1byteDisplay(~__7SEG_ONLY_G_1Byte | ~__7SEG_ONLY_DP_1Byte);
+			__7Seg1byteDisplay(~__7SEG_ONLY_G_1Byte | ~__7SEG_ONLY_DP_1Byte);
+			break;
+	}
+}
+
 void __7Seg1byteDisplay(uint8_t _displayContent){
     HAL_GPIO_WritePin(_7SegSetting.__7SegRck_GpioPort, _7SegSetting.__7SegRck_Pin, GPIO_PIN_RESET);
     for (int i = 0; i < 8; i++){

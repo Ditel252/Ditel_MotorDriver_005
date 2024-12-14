@@ -67,6 +67,26 @@ void Init(){
 	_Init_7Seg();
 	_7SegReset();
 
+	_7SegSetUpAnimation(_SETUP_STEP_START_PROGRAM);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_SETUP_MOTOR);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL1);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL2);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL3);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL4);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL5);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_NULL6);
+	HAL_Delay(200);
+	_7SegSetUpAnimation(_SETUP_STEP_FINISH);
+	HAL_Delay(200);
+	_7SegReset();
+
 	_Init_Motor();
 
 }
