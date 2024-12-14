@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "D-M-005/7Seg.h"
+#include "D-M-005/Motor.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,7 +56,9 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void Init_7Seg();
+void Init();
+void _Init_7Seg();
+void _Init_Motor();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -75,6 +78,8 @@ void Init_7Seg();
 #define ROTARY_ENCODER_B_GPIO_Port GPIOA
 #define ROTARY_ENCODER_A_Pin GPIO_PIN_7
 #define ROTARY_ENCODER_A_GPIO_Port GPIOA
+#define SIG_N2_Pin GPIO_PIN_0
+#define SIG_N2_GPIO_Port GPIOB
 #define SIG_P2_Pin GPIO_PIN_1
 #define SIG_P2_GPIO_Port GPIOB
 #define LED_POWER_Pin GPIO_PIN_8
@@ -89,6 +94,8 @@ void Init_7Seg();
 #define CAN_TXD_GPIO_Port GPIOA
 #define SIG_P1_Pin GPIO_PIN_15
 #define SIG_P1_GPIO_Port GPIOA
+#define SIG_N1_Pin GPIO_PIN_3
+#define SIG_N1_GPIO_Port GPIOB
 #define _7SEG_SCK_Pin GPIO_PIN_4
 #define _7SEG_SCK_GPIO_Port GPIOB
 #define _7SEG_RCK_Pin GPIO_PIN_5
