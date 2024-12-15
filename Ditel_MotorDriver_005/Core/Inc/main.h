@@ -76,8 +76,6 @@ void _Init_Motor();
 #define ROTARY_ENCODER_Z_GPIO_Port GPIOA
 #define ROTARY_ENCODER_B_Pin GPIO_PIN_6
 #define ROTARY_ENCODER_B_GPIO_Port GPIOA
-#define ROTARY_ENCODER_A_Pin GPIO_PIN_7
-#define ROTARY_ENCODER_A_GPIO_Port GPIOA
 #define SIG_N2_Pin GPIO_PIN_0
 #define SIG_N2_GPIO_Port GPIOB
 #define SIG_P2_Pin GPIO_PIN_1

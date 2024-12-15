@@ -1,1 +1,2 @@
-../Core/Src/D-M-005/Motor.c:14:6:_MotorInit	16	static
+../Core/Src/D-M-005/Motor.c:13:6:_MotorInit	16	static
+../Core/Src/D-M-005/Motor.c:39:6:_MotorSetSpeed	16	static
