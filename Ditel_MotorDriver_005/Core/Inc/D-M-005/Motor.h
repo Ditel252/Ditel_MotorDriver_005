@@ -15,7 +15,7 @@
 #define _MOTOR_MODE_FORWARD	0x02
 #define _MOTOR_MODE_REVARCE	0x03
 
-#define __MOTOR_DEAD_TIME
+#define __MOTOR_DEAD_TIME ((uint16_t)((float)800 * 1.5))	//[us]
 
 #define __MOTOR_MAX_SPEED	60000
 
@@ -36,5 +36,7 @@ typedef struct{
 void _MotorInit(_MOTOR_SETTING *);
 
 void _MotorSetSpeed(uint8_t, uint16_t);
+
+void __Delay_Microseconds(uint16_t);
 
 #endif /* INC_D_M_005_MOTOR_H_ */
