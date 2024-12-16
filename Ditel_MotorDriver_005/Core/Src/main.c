@@ -53,6 +53,9 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 _7SEG_SETTING Setting_7Seg;
 _MOTOR_SETTING Setting_Motor;
+_SWITCH_SETTING Setting_Swich;
+
+_SWITCH_READ_DATA SwichReadData;
 
 /* USER CODE END PV */
 
@@ -71,34 +74,71 @@ void Init(){
 	uint32_t _nowTick = HAL_GetTick();
 	uint32_t _lastReadTick = _nowTick;
 
+	//Start Program
 	_Init_7Seg();
 	_7SegReset();
 
 	_7SegSetUpAnimation(_SETUP_STEP_START_PROGRAM);
+	_lastReadTick = _nowTick;
+
+	//Init Motor
 	_Init_Motor();
 
-
-
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_MOTOR);
-	HAL_Delay(200);
-	_7SegSetUpAnimation(_SETUP_STEP_NULL1);
-	HAL_Delay(200);
+
+	//Init Switch And Read State
+	_Init_Switch();
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
+	_7SegSetUpAnimation(_SETUP_STEP_SETUP_AND_READ_SWICH);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_NULL2);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_NULL3);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_NULL4);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_NULL5);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_NULL6);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegSetUpAnimation(_SETUP_STEP_FINISH);
-	HAL_Delay(200);
+
+
+	while((_nowTick - _lastReadTick) <= 200)
+		_nowTick = HAL_GetTick();
+	_lastReadTick = _nowTick;
 	_7SegReset();
-
-
 }
 
 void _Init_7Seg(){
@@ -127,6 +167,18 @@ void _Init_Motor(){
 	Setting_Motor.__DeadTime_TIM = &htim1;
 
 	_MotorInit(&Setting_Motor);
+}
+
+void _Init_Switch(){
+	Setting_Swich.__ShiftRegisterClk_GpioPort = SW_CLK_GPIO_Port;
+	Setting_Swich.__ShiftRegisterClk_Pin = SW_CLK_Pin;
+	Setting_Swich.__ShiftRegisterQh_GpioPort = SW_QH_GPIO_Port;
+	Setting_Swich.__ShiftRegisterQh_Pin = SW_QH_Pin;
+	Setting_Swich.__ShiftRegisterShLd_GpioPort = SW_SH_LD_GPIO_Port;
+	Setting_Swich.__ShiftRegisterShLd_Pin = SW_SH_LD_Pin;
+
+	_SwitchInit(&Setting_Swich);
+	_SwitchRead(&SwichReadData);
 }
 /* USER CODE END PFP */
 
@@ -177,6 +229,11 @@ int main(void)
   Init(); //Init
 
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+
+  char str[128];
+
+  sprintf(str, "0x%02x : %u : %u\r\n", SwichReadData._Address, SwichReadData._OperatingMode, SwichReadData._CommunicationMode);
+  HAL_UART_Transmit(&huart1, (uint8_t *)str, 14, 300);
 
   /* USER CODE END 2 */
 
@@ -501,7 +558,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 38400;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;

@@ -142,7 +142,7 @@ void _7SegSetUpAnimation(_SETUP_STEP_FOR_7SEG __SetupStep){
 			__7Seg1byteDisplay(__7SEG_ONLY_A_1Byte);
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			break;
-		case _SETUP_STEP_NULL1:
+		case _SETUP_STEP_SETUP_AND_READ_SWICH:
 			__7Seg1byteDisplay(__7SEG_ONLY_B_1Byte);
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			break;

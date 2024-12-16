@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "D-M-005/7Seg.h"
 #include "D-M-005/Motor.h"
+#include "D-M-005/Switch.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,6 +60,7 @@ void Error_Handler(void);
 void Init();
 void _Init_7Seg();
 void _Init_Motor();
+void _Init_Switch();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

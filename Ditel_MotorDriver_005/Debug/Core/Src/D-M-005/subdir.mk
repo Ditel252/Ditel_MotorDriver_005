@@ -6,15 +6,18 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/D-M-005/7Seg.c \
-../Core/Src/D-M-005/Motor.c 
+../Core/Src/D-M-005/Motor.c \
+../Core/Src/D-M-005/Swtich.c 
 
 OBJS += \
 ./Core/Src/D-M-005/7Seg.o \
-./Core/Src/D-M-005/Motor.o 
+./Core/Src/D-M-005/Motor.o \
+./Core/Src/D-M-005/Swtich.o 
 
 C_DEPS += \
 ./Core/Src/D-M-005/7Seg.d \
-./Core/Src/D-M-005/Motor.d 
+./Core/Src/D-M-005/Motor.d \
+./Core/Src/D-M-005/Swtich.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +27,7 @@ Core/Src/D-M-005/%.o Core/Src/D-M-005/%.su Core/Src/D-M-005/%.cyclo: ../Core/Src
 clean: clean-Core-2f-Src-2f-D-2d-M-2d-005
 
 clean-Core-2f-Src-2f-D-2d-M-2d-005:
-	-$(RM) ./Core/Src/D-M-005/7Seg.cyclo ./Core/Src/D-M-005/7Seg.d ./Core/Src/D-M-005/7Seg.o ./Core/Src/D-M-005/7Seg.su ./Core/Src/D-M-005/Motor.cyclo ./Core/Src/D-M-005/Motor.d ./Core/Src/D-M-005/Motor.o ./Core/Src/D-M-005/Motor.su
+	-$(RM) ./Core/Src/D-M-005/7Seg.cyclo ./Core/Src/D-M-005/7Seg.d ./Core/Src/D-M-005/7Seg.o ./Core/Src/D-M-005/7Seg.su ./Core/Src/D-M-005/Motor.cyclo ./Core/Src/D-M-005/Motor.d ./Core/Src/D-M-005/Motor.o ./Core/Src/D-M-005/Motor.su ./Core/Src/D-M-005/Swtich.cyclo ./Core/Src/D-M-005/Swtich.d ./Core/Src/D-M-005/Swtich.o ./Core/Src/D-M-005/Swtich.su
 
 .PHONY: clean-Core-2f-Src-2f-D-2d-M-2d-005
 
