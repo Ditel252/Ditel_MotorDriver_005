@@ -54,8 +54,9 @@ UART_HandleTypeDef huart2;
 _7SEG_SETTING Setting_7Seg;
 _MOTOR_SETTING Setting_Motor;
 _SWITCH_SETTING Setting_Swich;
+_CONSOLE_SETTING Setting_Console;
 
-_SWITCH_READ_DATA SwichReadData;
+_SWITCH_READ_DATA SwitchReadData;
 
 /* USER CODE END PV */
 
@@ -71,74 +72,54 @@ static void MX_TIM1_Init(void);
 static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 void Init(){
-	uint32_t _nowTick = HAL_GetTick();
-	uint32_t _lastReadTick = _nowTick;
+	uint32_t _lastReadTick;
 
 	//Start Program
 	_Init_7Seg();
 	_7SegReset();
 
 	_7SegSetUpAnimation(_SETUP_STEP_START_PROGRAM);
-	_lastReadTick = _nowTick;
+	_lastReadTick = HAL_GetTick();
 
 	//Init Motor
 	_Init_Motor();
 
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
-
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_MOTOR);
 
 	//Init Switch And Read State
 	_Init_Switch();
 
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_AND_READ_SWICH);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL2);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL3);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL4);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL5);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL6);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_FINISH);
 
-
-	while((_nowTick - _lastReadTick) <= 200)
-		_nowTick = HAL_GetTick();
-	_lastReadTick = _nowTick;
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegReset();
+
+
+	_lastReadTick = _AccurateDelay(200, _lastReadTick);
+
+	if(SwitchReadData._OperatingMode == _SWITCH_OPERATION_MODE_PC_CONSOLE){
+		_7SegDisplay(_displayContent, isDisplayDp)
+	}
 }
 
 void _Init_7Seg(){
@@ -178,7 +159,11 @@ void _Init_Switch(){
 	Setting_Swich.__ShiftRegisterShLd_Pin = SW_SH_LD_Pin;
 
 	_SwitchInit(&Setting_Swich);
-	_SwitchRead(&SwichReadData);
+	_SwitchRead(&SwitchReadData);
+}
+
+void _Init_Console(){
+	Setting_Console.__PcUart = &huart1;
 }
 /* USER CODE END PFP */
 
