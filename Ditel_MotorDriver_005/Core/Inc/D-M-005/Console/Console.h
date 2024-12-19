@@ -19,4 +19,6 @@ typedef struct{
 
 void _ConsoleInit(_CONSOLE_SETTING *);
 
+void _ConsoleStartLogo();
+
 #endif /* INC_D_M_005_CONSOLE_H_ */

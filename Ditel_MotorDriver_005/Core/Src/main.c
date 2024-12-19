@@ -214,7 +214,8 @@ int main(void)
 
   Init(); //Init
 
-  Dprintf("Hello World!!");
+  Dprintf("Hello World!!\r\n");
+  _ConsoleStartLogo();
 
   /* USER CODE END 2 */
 
