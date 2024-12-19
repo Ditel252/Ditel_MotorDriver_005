@@ -93,8 +93,11 @@ void Init(){
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_AND_READ_SWICH);
 
+	//Init Console
+	_Init_Console();
+
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
-	_7SegSetUpAnimation(_SETUP_STEP_NULL2);
+	_7SegSetUpAnimation(_SETUP_STEP_SETUP_CONSOLE);
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL3);
@@ -116,10 +119,6 @@ void Init(){
 
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
-
-	if(SwitchReadData._OperatingMode == _SWITCH_OPERATION_MODE_PC_CONSOLE){
-		_7SegDisplay(_displayContent, isDisplayDp)
-	}
 }
 
 void _Init_7Seg(){
@@ -164,6 +163,8 @@ void _Init_Switch(){
 
 void _Init_Console(){
 	Setting_Console.__PcUart = &huart1;
+
+	_ConsoleInit(&Setting_Console);
 }
 /* USER CODE END PFP */
 
@@ -213,12 +214,7 @@ int main(void)
 
   Init(); //Init
 
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-
-  char str[128];
-
-  sprintf(str, "0x%02x : %u : %u\r\n", SwichReadData._Address, SwichReadData._OperatingMode, SwichReadData._CommunicationMode);
-  HAL_UART_Transmit(&huart1, (uint8_t *)str, 14, 300);
+  Dprintf("Hello World!!");
 
   /* USER CODE END 2 */
 

@@ -35,6 +35,7 @@ extern "C" {
 #include "D-M-005/Motor.h"
 #include "D-M-005/Switch.h"
 #include "D-M-005/Utility.h"
+#include "D-M-005/Console/Console.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

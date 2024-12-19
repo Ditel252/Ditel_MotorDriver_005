@@ -2,6 +2,8 @@
 "./Core/Src/D-M-005/Motor.o"
 "./Core/Src/D-M-005/Swtich.o"
 "./Core/Src/D-M-005/Utility.o"
+"./Core/Src/D-M-005/Console/Console.o"
+"./Core/Src/D-M-005/Console/Ditel_Printf.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f3xx_hal_msp.o"
 "./Core/Src/stm32f3xx_it.o"

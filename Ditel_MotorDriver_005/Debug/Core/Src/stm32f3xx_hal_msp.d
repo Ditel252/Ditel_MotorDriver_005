@@ -30,7 +30,9 @@ Core/Src/stm32f3xx_hal_msp.o: ../Core/Src/stm32f3xx_hal_msp.c \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart_ex.h \
  ../Core/Inc/D-M-005/7Seg.h ../Core/Inc/D-M-005/Motor.h \
- ../Core/Inc/D-M-005/Switch.h ../Core/Inc/D-M-005/Utility.h
+ ../Core/Inc/D-M-005/Switch.h ../Core/Inc/D-M-005/Utility.h \
+ ../Core/Inc/D-M-005/Console/Console.h \
+ ../Core/Inc/D-M-005/Console/Ditel_Printf.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
 ../Core/Inc/stm32f3xx_hal_conf.h:
@@ -66,3 +68,5 @@ Core/Src/stm32f3xx_hal_msp.o: ../Core/Src/stm32f3xx_hal_msp.c \
 ../Core/Inc/D-M-005/Motor.h:
 ../Core/Inc/D-M-005/Switch.h:
 ../Core/Inc/D-M-005/Utility.h:
+../Core/Inc/D-M-005/Console/Console.h:
+../Core/Inc/D-M-005/Console/Ditel_Printf.h:
