@@ -12,6 +12,7 @@
 #include "Ditel_Printf.h"
 
 #define __CONSOLE_STRING_LENGTH 128
+extern char _ConsoleReadString[__CONSOLE_STRING_LENGTH];
 
 typedef struct{
 	UART_HandleTypeDef *__PcUart;
@@ -20,5 +21,7 @@ typedef struct{
 void _ConsoleInit(_CONSOLE_SETTING *);
 
 void _ConsoleStartLogo();
+
+void _ConsoleCommandRead();
 
 #endif /* INC_D_M_005_CONSOLE_H_ */

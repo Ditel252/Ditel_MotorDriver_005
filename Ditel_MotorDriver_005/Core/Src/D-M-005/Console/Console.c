@@ -9,6 +9,7 @@
 #include "D-M-005/Console/Console.h"
 
 _CONSOLE_SETTING _ConsoleSetting;
+char _ConsoleReadString[__CONSOLE_STRING_LENGTH];
 
 void _ConsoleInit(_CONSOLE_SETTING *__ConsoleSetting){
 	_ConsoleSetting.__PcUart = __ConsoleSetting->__PcUart;
@@ -54,7 +55,22 @@ void _ConsoleStartLogo(){
 }
 
 void _ConsoleCommandRead(){
-	while(true){
-		HAlUart
+	uint8_t _reciveData;
+	uint8_t _consoleReadStringCount = 0;
+	while(1){
+		while(HAL_UART_Receive(_ConsoleSetting.__PcUart, &_reciveData, 1, 300) != HAL_OK);
+
+		if(_reciveData == 13){
+			break;
+		}else if(_reciveData == 8 && _consoleReadStringCount > 0){
+			HAL_UART_Transmit(_ConsoleSetting.__PcUart, (uint8_t *)"\b \b", 3, 300);
+			_consoleReadStringCount--;
+		}else{
+			HAL_UART_Transmit(_ConsoleSetting.__PcUart, &_reciveData, 1, 300);
+			_ConsoleReadString[_consoleReadStringCount] = _reciveData;
+			_consoleReadStringCount++;
+		}
 	}
+	HAL_UART_Transmit(_ConsoleSetting.__PcUart, (uint8_t *)"\n\r", 2, 300);
+	_ConsoleReadString[_consoleReadStringCount] = '\0';
 }

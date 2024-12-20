@@ -216,6 +216,8 @@ int main(void)
 
   Dprintf("Hello World!!\r\n");
   _ConsoleStartLogo();
+  _ConsoleCommandRead();
+  Dprintf(_ConsoleReadString);
 
   /* USER CODE END 2 */
 
