@@ -10,9 +10,11 @@
 
 #include "stm32f3xx_hal.h"
 #include "stdbool.h"
+#include "stdlib.h"
 
 #define _CONSOLE_COMMAND_AND_MODE_STRING_MAX_LENGTH 32
 #define _CONSOLE_MODE_MAX_NUM 32
+#define _CONSOLE_ARGUMENT_MAX_NUM 5
 
 typedef enum{
 	_CONSOLE_COMMAND_MOTOR = 0,
@@ -27,9 +29,11 @@ typedef enum{
 	_CONSOLE_MOTOR_MODE_FORWARD,
 	_CONSOLE_MOTOR_MODE_BACKWARD,
 	_CONSOLE_MOTOR_MODE_CHECK,
+	_CONSOLE_MOTOR_MODE_MAX_NUM,
 
 	_CONSOLE_PID_MODE_SET = 0,
-	_CONSOLE_PID_MODE_CHECK
+	_CONSOLE_PID_MODE_CHECK,
+	_CONSOLE_PID_MODE_MAX_NUM
 }__CONSOLE_MODE;
 
 typedef struct{
@@ -42,6 +46,7 @@ typedef struct{
 typedef struct{
 	__CONSOLE_COMMAND _command;
 	__CONSOLE_MODE _mode;
+	uint16_t _argument;
 }_CONSOLE_COMMAND_RESULT;
 
 void _CommandInit();

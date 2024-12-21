@@ -32,6 +32,9 @@ void _CommandInit(){
 bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 	char _commandString[_CONSOLE_COMMAND_AND_MODE_STRING_MAX_LENGTH];
 	char _modeString[_CONSOLE_COMMAND_AND_MODE_STRING_MAX_LENGTH];
+	char _argumentString[_CONSOLE_ARGUMENT_MAX_NUM];
+
+	_commandResult->_mode = _CONSOLE_NONE_MODE;
 
 	uint8_t _strCount = 0;
 
@@ -67,31 +70,53 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 			_strCount++;
 		}
 
-		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR){
-			__CONSOLE_MODE _consoleModeCount = _CONSOLE_MOTOR_MODE_CHECK;
+		_strCount++;
+		uint8_t _argumentStringCount = 0;
+		if(_str[_strCount] >= '0' && _str[_strCount] <= '9'){
+			while(1){
+				if(_str[_strCount] < '0' || _str[_strCount] > '9'){
+					_argumentString[_argumentStringCount] = '\0';
+					break;
+				}
+
+				_argumentString[_argumentStringCount] = _str[_strCount];
+				_argumentStringCount++;
+				_strCount++;
+			}
+
+			if(_str[_strCount] != '\0' && _str[_strCount] != ' ')
+				return false;
+
+			_commandResult->_argument = (uint16_t)atoi(_argumentString);
+		}else if(_str[_strCount] != '\0'){
+			return false;
+		}
+
+		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR){	//Motor Command Control Part
+			__CONSOLE_MODE _consoleModeCount = _CONSOLE_MOTOR_MODE_MAX_NUM;
 
 			while(1){
+				_consoleModeCount--;
 				if(strcmp(_modeString, _consoleCommand_motor._modeString[_consoleModeCount]) == 0)
 					break;
 
 				if(_consoleModeCount <= _CONSOLE_MOTOR_MODE_NEUTRAL)
 					return false;
-				_consoleModeCount--;
 			}
 
 			_commandResult->_mode = _consoleModeCount;
 
 			return true;
-		}else if(_commandResult->_command == _CONSOLE_COMMAND_PID){
-			__CONSOLE_MODE _consoleModeCount = _CONSOLE_PID_MODE_CHECK;
+		}else if(_commandResult->_command == _CONSOLE_COMMAND_PID){	//PID Command Control Part
+			__CONSOLE_MODE _consoleModeCount = _CONSOLE_PID_MODE_MAX_NUM;
 
 			while(1){
+				_consoleModeCount--;
 				if(strcmp(_modeString, _consoleCommand_pid._modeString[_consoleModeCount]) == 0)
 					break;
 
 				if(_consoleModeCount <= _CONSOLE_PID_MODE_SET)
 					return false;
-				_consoleModeCount--;
 			}
 
 			_commandResult->_mode = _consoleModeCount;
@@ -102,6 +127,8 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 		}
 	}else{
 		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR)
+			return false;
+		else if(_commandResult->_command == _CONSOLE_COMMAND_PID)
 			return false;
 		else
 			return true;

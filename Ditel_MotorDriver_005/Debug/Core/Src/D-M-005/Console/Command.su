@@ -1,2 +1,2 @@
 ../Core/Src/D-M-005/Console/Command.c:17:6:_CommandInit	4	static
-../Core/Src/D-M-005/Console/Command.c:32:6:_CommandCollation	88	static
+../Core/Src/D-M-005/Console/Command.c:32:6:_CommandCollation	96	static

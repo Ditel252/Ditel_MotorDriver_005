@@ -226,6 +226,7 @@ int main(void)
 	  _ConsoleCommandRead();
 	  Dprintf("Command : %d\r\n", _ConsoleCommandResult._command);
 	  Dprintf("Mode    : %d\r\n", _ConsoleCommandResult._mode);
+	  Dprintf("Argument: %u\r\n", _ConsoleCommandResult._argument);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

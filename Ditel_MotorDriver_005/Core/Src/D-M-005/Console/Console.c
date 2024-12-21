@@ -53,6 +53,7 @@ void _ConsoleStartLogo(){
 
 	Dprintf("<Commands>\r\n");
 	Dprintf(">motor [neutral] [brake] [forward <power(0~59999)>] [backward <power(0~59999)>] [check]\r\n");
+	Dprintf(">pid [set] [check]\r\n");
 
 
 	Dprintf("============================================================================================================\r\n");
