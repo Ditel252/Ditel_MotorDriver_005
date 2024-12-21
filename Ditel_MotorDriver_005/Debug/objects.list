@@ -2,6 +2,7 @@
 "./Core/Src/D-M-005/Motor.o"
 "./Core/Src/D-M-005/Swtich.o"
 "./Core/Src/D-M-005/Utility.o"
+"./Core/Src/D-M-005/Console/Command.o"
 "./Core/Src/D-M-005/Console/Console.o"
 "./Core/Src/D-M-005/Console/Ditel_Printf.o"
 "./Core/Src/main.o"

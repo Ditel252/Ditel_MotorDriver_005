@@ -216,8 +216,6 @@ int main(void)
 
   Dprintf("Hello World!!\r\n");
   _ConsoleStartLogo();
-  _ConsoleCommandRead();
-  Dprintf(_ConsoleReadString);
 
   /* USER CODE END 2 */
 
@@ -225,6 +223,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  _ConsoleCommandRead();
+	  Dprintf("Command : %d\r\n", _ConsoleCommandResult._command);
+	  Dprintf("Mode    : %d\r\n", _ConsoleCommandResult._mode);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

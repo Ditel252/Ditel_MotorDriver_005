@@ -5,14 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/D-M-005/Console/Command.c \
 ../Core/Src/D-M-005/Console/Console.c \
 ../Core/Src/D-M-005/Console/Ditel_Printf.c 
 
 OBJS += \
+./Core/Src/D-M-005/Console/Command.o \
 ./Core/Src/D-M-005/Console/Console.o \
 ./Core/Src/D-M-005/Console/Ditel_Printf.o 
 
 C_DEPS += \
+./Core/Src/D-M-005/Console/Command.d \
 ./Core/Src/D-M-005/Console/Console.d \
 ./Core/Src/D-M-005/Console/Ditel_Printf.d 
 
@@ -24,7 +27,7 @@ Core/Src/D-M-005/Console/%.o Core/Src/D-M-005/Console/%.su Core/Src/D-M-005/Cons
 clean: clean-Core-2f-Src-2f-D-2d-M-2d-005-2f-Console
 
 clean-Core-2f-Src-2f-D-2d-M-2d-005-2f-Console:
-	-$(RM) ./Core/Src/D-M-005/Console/Console.cyclo ./Core/Src/D-M-005/Console/Console.d ./Core/Src/D-M-005/Console/Console.o ./Core/Src/D-M-005/Console/Console.su ./Core/Src/D-M-005/Console/Ditel_Printf.cyclo ./Core/Src/D-M-005/Console/Ditel_Printf.d ./Core/Src/D-M-005/Console/Ditel_Printf.o ./Core/Src/D-M-005/Console/Ditel_Printf.su
+	-$(RM) ./Core/Src/D-M-005/Console/Command.cyclo ./Core/Src/D-M-005/Console/Command.d ./Core/Src/D-M-005/Console/Command.o ./Core/Src/D-M-005/Console/Command.su ./Core/Src/D-M-005/Console/Console.cyclo ./Core/Src/D-M-005/Console/Console.d ./Core/Src/D-M-005/Console/Console.o ./Core/Src/D-M-005/Console/Console.su ./Core/Src/D-M-005/Console/Ditel_Printf.cyclo ./Core/Src/D-M-005/Console/Ditel_Printf.d ./Core/Src/D-M-005/Console/Ditel_Printf.o ./Core/Src/D-M-005/Console/Ditel_Printf.su
 
 .PHONY: clean-Core-2f-Src-2f-D-2d-M-2d-005-2f-Console
 

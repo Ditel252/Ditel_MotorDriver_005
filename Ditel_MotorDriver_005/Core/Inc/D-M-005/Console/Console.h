@@ -10,9 +10,11 @@
 
 #include "stm32f3xx_hal.h"
 #include "Ditel_Printf.h"
+#include "D-M-005/Console/Command.h"
 
 #define __CONSOLE_STRING_LENGTH 128
 extern char _ConsoleReadString[__CONSOLE_STRING_LENGTH];
+extern _CONSOLE_COMMAND_RESULT _ConsoleCommandResult;
 
 typedef struct{
 	UART_HandleTypeDef *__PcUart;
