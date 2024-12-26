@@ -1083,9 +1083,9 @@ void _CommandInit(){
  80008e8:	08006ba4 	.word	0x08006ba4
  80008ec:	20000531 	.word	0x20000531
 
-080008f0 <_CommandCollation>:
+080008f0 <_ConsoleCollation>:
 
-bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
+bool _ConsoleCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  80008f0:	b580      	push	{r7, lr}
  80008f2:	b096      	sub	sp, #88	@ 0x58
  80008f4:	af00      	add	r7, sp, #0
@@ -1111,13 +1111,13 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  800090c:	4413      	add	r3, r2
  800090e:	781b      	ldrb	r3, [r3, #0]
  8000910:	2b20      	cmp	r3, #32
- 8000912:	d006      	beq.n	8000922 <_CommandCollation+0x32>
+ 8000912:	d006      	beq.n	8000922 <_ConsoleCollation+0x32>
  8000914:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000918:	687a      	ldr	r2, [r7, #4]
  800091a:	4413      	add	r3, r2
  800091c:	781b      	ldrb	r3, [r3, #0]
  800091e:	2b00      	cmp	r3, #0
- 8000920:	d111      	bne.n	8000946 <_CommandCollation+0x56>
+ 8000920:	d111      	bne.n	8000946 <_ConsoleCollation+0x56>
 			_commandString[_strCount] = '\0';
  8000922:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000926:	3358      	adds	r3, #88	@ 0x58
@@ -1126,20 +1126,20 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  800092c:	f803 2c28 	strb.w	r2, [r3, #-40]
 			break;
  8000930:	bf00      	nop
-
 		_commandString[_strCount] = _str[_strCount];
 		_strCount++;
 	}
 
+	//Setting Command
 	if(strcmp(_commandString, _consoleCommand_motor._commandString) == 0)
  8000932:	f107 0330 	add.w	r3, r7, #48	@ 0x30
- 8000936:	499c      	ldr	r1, [pc, #624]	@ (8000ba8 <_CommandCollation+0x2b8>)
+ 8000936:	499c      	ldr	r1, [pc, #624]	@ (8000ba8 <_ConsoleCollation+0x2b8>)
  8000938:	4618      	mov	r0, r3
  800093a:	f7ff fc49 	bl	80001d0 <strcmp>
  800093e:	4603      	mov	r3, r0
  8000940:	2b00      	cmp	r3, #0
- 8000942:	d115      	bne.n	8000970 <_CommandCollation+0x80>
- 8000944:	e010      	b.n	8000968 <_CommandCollation+0x78>
+ 8000942:	d115      	bne.n	8000970 <_ConsoleCollation+0x80>
+ 8000944:	e010      	b.n	8000968 <_ConsoleCollation+0x78>
 		_commandString[_strCount] = _str[_strCount];
  8000946:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  800094a:	687a      	ldr	r2, [r7, #4]
@@ -1154,29 +1154,29 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000960:	3301      	adds	r3, #1
  8000962:	f887 3057 	strb.w	r3, [r7, #87]	@ 0x57
 		if(_str[_strCount] == ' ' || _str[_strCount] == '\0'){
- 8000966:	e7ce      	b.n	8000906 <_CommandCollation+0x16>
+ 8000966:	e7ce      	b.n	8000906 <_ConsoleCollation+0x16>
 		_commandResult->_command = _CONSOLE_COMMAND_MOTOR;
  8000968:	683b      	ldr	r3, [r7, #0]
  800096a:	2200      	movs	r2, #0
  800096c:	701a      	strb	r2, [r3, #0]
- 800096e:	e00e      	b.n	800098e <_CommandCollation+0x9e>
+ 800096e:	e00e      	b.n	800098e <_ConsoleCollation+0x9e>
 	else if(strcmp(_commandString, _consoleCommand_pid._commandString) == 0)
  8000970:	f107 0330 	add.w	r3, r7, #48	@ 0x30
- 8000974:	498d      	ldr	r1, [pc, #564]	@ (8000bac <_CommandCollation+0x2bc>)
+ 8000974:	498d      	ldr	r1, [pc, #564]	@ (8000bac <_ConsoleCollation+0x2bc>)
  8000976:	4618      	mov	r0, r3
  8000978:	f7ff fc2a 	bl	80001d0 <strcmp>
  800097c:	4603      	mov	r3, r0
  800097e:	2b00      	cmp	r3, #0
- 8000980:	d103      	bne.n	800098a <_CommandCollation+0x9a>
+ 8000980:	d103      	bne.n	800098a <_ConsoleCollation+0x9a>
 		_commandResult->_command = _CONSOLE_COMMAND_PID;
  8000982:	683b      	ldr	r3, [r7, #0]
  8000984:	2201      	movs	r2, #1
  8000986:	701a      	strb	r2, [r3, #0]
- 8000988:	e001      	b.n	800098e <_CommandCollation+0x9e>
+ 8000988:	e001      	b.n	800098e <_ConsoleCollation+0x9e>
 	else
 		return false;
  800098a:	2300      	movs	r3, #0
- 800098c:	e107      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 800098c:	e107      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 
 	uint8_t _modeStringCount = 0;
  800098e:	2300      	movs	r3, #0
@@ -1187,7 +1187,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  800099a:	4413      	add	r3, r2
  800099c:	781b      	ldrb	r3, [r3, #0]
  800099e:	2b00      	cmp	r3, #0
- 80009a0:	f000 80f0 	beq.w	8000b84 <_CommandCollation+0x294>
+ 80009a0:	f000 80f0 	beq.w	8000b84 <_ConsoleCollation+0x294>
 		_strCount++;
  80009a4:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  80009a8:	3301      	adds	r3, #1
@@ -1200,13 +1200,13 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  80009b4:	4413      	add	r3, r2
  80009b6:	781b      	ldrb	r3, [r3, #0]
  80009b8:	2b20      	cmp	r3, #32
- 80009ba:	d006      	beq.n	80009ca <_CommandCollation+0xda>
+ 80009ba:	d006      	beq.n	80009ca <_ConsoleCollation+0xda>
  80009bc:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  80009c0:	687a      	ldr	r2, [r7, #4]
  80009c2:	4413      	add	r3, r2
  80009c4:	781b      	ldrb	r3, [r3, #0]
  80009c6:	2b00      	cmp	r3, #0
- 80009c8:	d117      	bne.n	80009fa <_CommandCollation+0x10a>
+ 80009c8:	d117      	bne.n	80009fa <_ConsoleCollation+0x10a>
 				_modeString[_modeStringCount] = '\0';
  80009ca:	f897 3056 	ldrb.w	r3, [r7, #86]	@ 0x56
  80009ce:	3358      	adds	r3, #88	@ 0x58
@@ -1233,8 +1233,8 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  80009f0:	4413      	add	r3, r2
  80009f2:	781b      	ldrb	r3, [r3, #0]
  80009f4:	2b2f      	cmp	r3, #47	@ 0x2f
- 80009f6:	d964      	bls.n	8000ac2 <_CommandCollation+0x1d2>
- 80009f8:	e015      	b.n	8000a26 <_CommandCollation+0x136>
+ 80009f6:	d964      	bls.n	8000ac2 <_ConsoleCollation+0x1d2>
+ 80009f8:	e015      	b.n	8000a26 <_ConsoleCollation+0x136>
 			_modeString[_modeStringCount] = _str[_strCount];
  80009fa:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  80009fe:	687a      	ldr	r2, [r7, #4]
@@ -1253,14 +1253,14 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000a1e:	3301      	adds	r3, #1
  8000a20:	f887 3057 	strb.w	r3, [r7, #87]	@ 0x57
 			if(_str[_strCount] == ' ' || _str[_strCount] == '\0'){
- 8000a24:	e7c3      	b.n	80009ae <_CommandCollation+0xbe>
+ 8000a24:	e7c3      	b.n	80009ae <_ConsoleCollation+0xbe>
 		if(_str[_strCount] >= '0' && _str[_strCount] <= '9'){
  8000a26:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000a2a:	687a      	ldr	r2, [r7, #4]
  8000a2c:	4413      	add	r3, r2
  8000a2e:	781b      	ldrb	r3, [r3, #0]
  8000a30:	2b39      	cmp	r3, #57	@ 0x39
- 8000a32:	d846      	bhi.n	8000ac2 <_CommandCollation+0x1d2>
+ 8000a32:	d846      	bhi.n	8000ac2 <_ConsoleCollation+0x1d2>
 			while(1){
 				if(_str[_strCount] < '0' || _str[_strCount] > '9'){
  8000a34:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
@@ -1268,13 +1268,13 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000a3a:	4413      	add	r3, r2
  8000a3c:	781b      	ldrb	r3, [r3, #0]
  8000a3e:	2b2f      	cmp	r3, #47	@ 0x2f
- 8000a40:	d906      	bls.n	8000a50 <_CommandCollation+0x160>
+ 8000a40:	d906      	bls.n	8000a50 <_ConsoleCollation+0x160>
  8000a42:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000a46:	687a      	ldr	r2, [r7, #4]
  8000a48:	4413      	add	r3, r2
  8000a4a:	781b      	ldrb	r3, [r3, #0]
  8000a4c:	2b39      	cmp	r3, #57	@ 0x39
- 8000a4e:	d90f      	bls.n	8000a70 <_CommandCollation+0x180>
+ 8000a4e:	d90f      	bls.n	8000a70 <_ConsoleCollation+0x180>
 					_argumentString[_argumentStringCount] = '\0';
  8000a50:	f897 3055 	ldrb.w	r3, [r7, #85]	@ 0x55
  8000a54:	3358      	adds	r3, #88	@ 0x58
@@ -1294,8 +1294,8 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000a66:	4413      	add	r3, r2
  8000a68:	781b      	ldrb	r3, [r3, #0]
  8000a6a:	2b00      	cmp	r3, #0
- 8000a6c:	d01f      	beq.n	8000aae <_CommandCollation+0x1be>
- 8000a6e:	e015      	b.n	8000a9c <_CommandCollation+0x1ac>
+ 8000a6c:	d01f      	beq.n	8000aae <_ConsoleCollation+0x1be>
+ 8000a6e:	e015      	b.n	8000a9c <_ConsoleCollation+0x1ac>
 				_argumentString[_argumentStringCount] = _str[_strCount];
  8000a70:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000a74:	687a      	ldr	r2, [r7, #4]
@@ -1314,17 +1314,17 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000a94:	3301      	adds	r3, #1
  8000a96:	f887 3057 	strb.w	r3, [r7, #87]	@ 0x57
 				if(_str[_strCount] < '0' || _str[_strCount] > '9'){
- 8000a9a:	e7cb      	b.n	8000a34 <_CommandCollation+0x144>
+ 8000a9a:	e7cb      	b.n	8000a34 <_ConsoleCollation+0x144>
 			if(_str[_strCount] != '\0' && _str[_strCount] != ' ')
  8000a9c:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000aa0:	687a      	ldr	r2, [r7, #4]
  8000aa2:	4413      	add	r3, r2
  8000aa4:	781b      	ldrb	r3, [r3, #0]
  8000aa6:	2b20      	cmp	r3, #32
- 8000aa8:	d001      	beq.n	8000aae <_CommandCollation+0x1be>
+ 8000aa8:	d001      	beq.n	8000aae <_ConsoleCollation+0x1be>
 				return false;
  8000aaa:	2300      	movs	r3, #0
- 8000aac:	e077      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000aac:	e077      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 
 			_commandResult->_argument = (uint16_t)atoi(_argumentString);
  8000aae:	f107 0308 	add.w	r3, r7, #8
@@ -1334,24 +1334,25 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000aba:	b29a      	uxth	r2, r3
  8000abc:	683b      	ldr	r3, [r7, #0]
  8000abe:	805a      	strh	r2, [r3, #2]
- 8000ac0:	e008      	b.n	8000ad4 <_CommandCollation+0x1e4>
+ 8000ac0:	e008      	b.n	8000ad4 <_ConsoleCollation+0x1e4>
 		}else if(_str[_strCount] != '\0'){
  8000ac2:	f897 3057 	ldrb.w	r3, [r7, #87]	@ 0x57
  8000ac6:	687a      	ldr	r2, [r7, #4]
  8000ac8:	4413      	add	r3, r2
  8000aca:	781b      	ldrb	r3, [r3, #0]
  8000acc:	2b00      	cmp	r3, #0
- 8000ace:	d001      	beq.n	8000ad4 <_CommandCollation+0x1e4>
+ 8000ace:	d001      	beq.n	8000ad4 <_ConsoleCollation+0x1e4>
 			return false;
  8000ad0:	2300      	movs	r3, #0
- 8000ad2:	e064      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000ad2:	e064      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		}
 
+		//Setting mode
 		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR){	//Motor Command Control Part
  8000ad4:	683b      	ldr	r3, [r7, #0]
  8000ad6:	781b      	ldrb	r3, [r3, #0]
  8000ad8:	2b00      	cmp	r3, #0
- 8000ada:	d126      	bne.n	8000b2a <_CommandCollation+0x23a>
+ 8000ada:	d126      	bne.n	8000b2a <_ConsoleCollation+0x23a>
 			__CONSOLE_MODE _consoleModeCount = _CONSOLE_MOTOR_MODE_MAX_NUM;
  8000adc:	2305      	movs	r3, #5
  8000ade:	f887 3054 	strb.w	r3, [r7, #84]	@ 0x54
@@ -1367,7 +1368,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000af0:	f997 3054 	ldrsb.w	r3, [r7, #84]	@ 0x54
  8000af4:	3301      	adds	r3, #1
  8000af6:	015b      	lsls	r3, r3, #5
- 8000af8:	4a2d      	ldr	r2, [pc, #180]	@ (8000bb0 <_CommandCollation+0x2c0>)
+ 8000af8:	4a2d      	ldr	r2, [pc, #180]	@ (8000bb0 <_ConsoleCollation+0x2c0>)
  8000afa:	4413      	add	r3, r2
  8000afc:	1c5a      	adds	r2, r3, #1
  8000afe:	f107 0310 	add.w	r3, r7, #16
@@ -1376,16 +1377,16 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000b06:	f7ff fb63 	bl	80001d0 <strcmp>
  8000b0a:	4603      	mov	r3, r0
  8000b0c:	2b00      	cmp	r3, #0
- 8000b0e:	d005      	beq.n	8000b1c <_CommandCollation+0x22c>
+ 8000b0e:	d005      	beq.n	8000b1c <_ConsoleCollation+0x22c>
 					break;
 
 				if(_consoleModeCount <= _CONSOLE_MOTOR_MODE_NEUTRAL)
  8000b10:	f997 3054 	ldrsb.w	r3, [r7, #84]	@ 0x54
  8000b14:	2b00      	cmp	r3, #0
- 8000b16:	dce4      	bgt.n	8000ae2 <_CommandCollation+0x1f2>
+ 8000b16:	dce4      	bgt.n	8000ae2 <_ConsoleCollation+0x1f2>
 					return false;
  8000b18:	2300      	movs	r3, #0
- 8000b1a:	e040      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b1a:	e040      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 					break;
  8000b1c:	bf00      	nop
 			}
@@ -1397,12 +1398,12 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 
 			return true;
  8000b26:	2301      	movs	r3, #1
- 8000b28:	e039      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b28:	e039      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		}else if(_commandResult->_command == _CONSOLE_COMMAND_PID){	//PID Command Control Part
  8000b2a:	683b      	ldr	r3, [r7, #0]
  8000b2c:	781b      	ldrb	r3, [r3, #0]
  8000b2e:	2b01      	cmp	r3, #1
- 8000b30:	d126      	bne.n	8000b80 <_CommandCollation+0x290>
+ 8000b30:	d126      	bne.n	8000b80 <_ConsoleCollation+0x290>
 			__CONSOLE_MODE _consoleModeCount = _CONSOLE_PID_MODE_MAX_NUM;
  8000b32:	2302      	movs	r3, #2
  8000b34:	f887 3053 	strb.w	r3, [r7, #83]	@ 0x53
@@ -1418,7 +1419,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000b46:	f997 3053 	ldrsb.w	r3, [r7, #83]	@ 0x53
  8000b4a:	3301      	adds	r3, #1
  8000b4c:	015b      	lsls	r3, r3, #5
- 8000b4e:	4a19      	ldr	r2, [pc, #100]	@ (8000bb4 <_CommandCollation+0x2c4>)
+ 8000b4e:	4a19      	ldr	r2, [pc, #100]	@ (8000bb4 <_ConsoleCollation+0x2c4>)
  8000b50:	4413      	add	r3, r2
  8000b52:	1c5a      	adds	r2, r3, #1
  8000b54:	f107 0310 	add.w	r3, r7, #16
@@ -1427,16 +1428,16 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
  8000b5c:	f7ff fb38 	bl	80001d0 <strcmp>
  8000b60:	4603      	mov	r3, r0
  8000b62:	2b00      	cmp	r3, #0
- 8000b64:	d005      	beq.n	8000b72 <_CommandCollation+0x282>
+ 8000b64:	d005      	beq.n	8000b72 <_ConsoleCollation+0x282>
 					break;
 
 				if(_consoleModeCount <= _CONSOLE_PID_MODE_SET)
  8000b66:	f997 3053 	ldrsb.w	r3, [r7, #83]	@ 0x53
  8000b6a:	2b00      	cmp	r3, #0
- 8000b6c:	dce4      	bgt.n	8000b38 <_CommandCollation+0x248>
+ 8000b6c:	dce4      	bgt.n	8000b38 <_ConsoleCollation+0x248>
 					return false;
  8000b6e:	2300      	movs	r3, #0
- 8000b70:	e015      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b70:	e015      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 					break;
  8000b72:	bf00      	nop
 			}
@@ -1448,29 +1449,30 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 
 			return true;
  8000b7c:	2301      	movs	r3, #1
- 8000b7e:	e00e      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b7e:	e00e      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		}else{
 			return false;
  8000b80:	2300      	movs	r3, #0
- 8000b82:	e00c      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b82:	e00c      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		}
 	}else{
+		//Setting Command
 		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR)
  8000b84:	683b      	ldr	r3, [r7, #0]
  8000b86:	781b      	ldrb	r3, [r3, #0]
  8000b88:	2b00      	cmp	r3, #0
- 8000b8a:	d101      	bne.n	8000b90 <_CommandCollation+0x2a0>
+ 8000b8a:	d101      	bne.n	8000b90 <_ConsoleCollation+0x2a0>
 			return false;
  8000b8c:	2300      	movs	r3, #0
- 8000b8e:	e006      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b8e:	e006      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		else if(_commandResult->_command == _CONSOLE_COMMAND_PID)
  8000b90:	683b      	ldr	r3, [r7, #0]
  8000b92:	781b      	ldrb	r3, [r3, #0]
  8000b94:	2b01      	cmp	r3, #1
- 8000b96:	d101      	bne.n	8000b9c <_CommandCollation+0x2ac>
+ 8000b96:	d101      	bne.n	8000b9c <_ConsoleCollation+0x2ac>
 			return false;
  8000b98:	2300      	movs	r3, #0
- 8000b9a:	e000      	b.n	8000b9e <_CommandCollation+0x2ae>
+ 8000b9a:	e000      	b.n	8000b9e <_ConsoleCollation+0x2ae>
 		else
 			return true;
  8000b9c:	2301      	movs	r3, #1
@@ -1742,10 +1744,10 @@ void _ConsoleCommandRead(){
  8000da0:	2100      	movs	r1, #0
  8000da2:	54d1      	strb	r1, [r2, r3]
 
-		if(_CommandCollation(_ConsoleReadString, &_ConsoleCommandResult))
+		if(_ConsoleCollation(_ConsoleReadString, &_ConsoleCommandResult))
  8000da4:	490b      	ldr	r1, [pc, #44]	@ (8000dd4 <_ConsoleCommandRead+0xbc>)
  8000da6:	4809      	ldr	r0, [pc, #36]	@ (8000dcc <_ConsoleCommandRead+0xb4>)
- 8000da8:	f7ff fda2 	bl	80008f0 <_CommandCollation>
+ 8000da8:	f7ff fda2 	bl	80008f0 <_ConsoleCollation>
  8000dac:	4603      	mov	r3, r0
  8000dae:	2b00      	cmp	r3, #0
  8000db0:	d100      	bne.n	8000db4 <_ConsoleCommandRead+0x9c>

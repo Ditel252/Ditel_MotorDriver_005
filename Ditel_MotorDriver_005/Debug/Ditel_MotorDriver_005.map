@@ -4336,9 +4336,9 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .text._CommandInit
                 0x0800082c       0xc4 ./Core/Src/D-M-005/Console/Command.o
                 0x0800082c                _CommandInit
- .text._CommandCollation
+ .text._ConsoleCollation
                 0x080008f0      0x2c8 ./Core/Src/D-M-005/Console/Command.o
-                0x080008f0                _CommandCollation
+                0x080008f0                _ConsoleCollation
  .text._ConsoleInit
                 0x08000bb8       0x2c ./Core/Src/D-M-005/Console/Console.o
                 0x08000bb8                _ConsoleInit

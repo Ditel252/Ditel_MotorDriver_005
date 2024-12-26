@@ -50,6 +50,6 @@ typedef struct{
 }_CONSOLE_COMMAND_RESULT;
 
 void _CommandInit();
-bool _CommandCollation(char *, _CONSOLE_COMMAND_RESULT *);
+bool _ConsoleCollation(char *, _CONSOLE_COMMAND_RESULT *);
 
 #endif /* INC_D_M_005_CONSOLE_COMMAND_H_ */

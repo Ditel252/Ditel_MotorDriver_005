@@ -29,7 +29,7 @@ void _CommandInit(){
 	strcpy(_consoleCommand_pid._modeString[_CONSOLE_PID_MODE_CHECK], "check");
 }
 
-bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
+bool _ConsoleCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 	char _commandString[_CONSOLE_COMMAND_AND_MODE_STRING_MAX_LENGTH];
 	char _modeString[_CONSOLE_COMMAND_AND_MODE_STRING_MAX_LENGTH];
 	char _argumentString[_CONSOLE_ARGUMENT_MAX_NUM];
@@ -48,6 +48,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 		_strCount++;
 	}
 
+	//Setting Command
 	if(strcmp(_commandString, _consoleCommand_motor._commandString) == 0)
 		_commandResult->_command = _CONSOLE_COMMAND_MOTOR;
 	else if(strcmp(_commandString, _consoleCommand_pid._commandString) == 0)
@@ -92,6 +93,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 			return false;
 		}
 
+		//Setting mode
 		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR){	//Motor Command Control Part
 			__CONSOLE_MODE _consoleModeCount = _CONSOLE_MOTOR_MODE_MAX_NUM;
 
@@ -126,6 +128,7 @@ bool _CommandCollation(char _str[], _CONSOLE_COMMAND_RESULT *_commandResult){
 			return false;
 		}
 	}else{
+		//Setting Command
 		if(_commandResult->_command == _CONSOLE_COMMAND_MOTOR)
 			return false;
 		else if(_commandResult->_command == _CONSOLE_COMMAND_PID)

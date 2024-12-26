@@ -83,7 +83,7 @@ void _ConsoleCommandRead(){
 		HAL_UART_Transmit(_ConsoleSetting.__PcUart, (uint8_t *)"\n\r", 2, 300);
 		_ConsoleReadString[_consoleReadStringCount] = '\0';
 
-		if(_CommandCollation(_ConsoleReadString, &_ConsoleCommandResult))
+		if(_ConsoleCollation(_ConsoleReadString, &_ConsoleCommandResult))
 			break;
 	}
 }
