@@ -85,5 +85,7 @@ void _ConsoleCommandRead(){
 
 		if(_ConsoleCollation(_ConsoleReadString, &_ConsoleCommandResult))
 			break;
+		else
+			Dprintf("Not Found This Command ot Mode\r\n");
 	}
 }
