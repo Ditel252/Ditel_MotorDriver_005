@@ -134,15 +134,15 @@ void _Init_7Seg(){
 }
 
 void _Init_Motor(){
-	Setting_Motor.__MotorN1_Tim = &htim2;
-	Setting_Motor.__MotorN1_TimChannel = TIM_CHANNEL_2;
-	Setting_Motor.__MotorN2_Tim = &htim3;
-	Setting_Motor.__MotorN2_TimChannel = TIM_CHANNEL_3;
+	Setting_Motor.__MotorP1_Tim = &htim2;
+	Setting_Motor.__MotorP1_TimChannel = TIM_CHANNEL_1;
+	Setting_Motor.__MotorP2_Tim = &htim3;
+	Setting_Motor.__MotorP2_TimChannel = TIM_CHANNEL_4;
 
-	Setting_Motor.__MotorP1_GpioPort = SIG_P1_GPIO_Port;
-	Setting_Motor.__MotorP1_Pin = SIG_P1_Pin;
-	Setting_Motor.__MotorP2_GpioPort = SIG_P2_GPIO_Port;
-	Setting_Motor.__MotorP2_Pin = SIG_P2_Pin;
+	Setting_Motor.__MotorN1_GpioPort = SIG_N1_GPIO_Port;
+	Setting_Motor.__MotorN1_Pin = SIG_N1_Pin;
+	Setting_Motor.__MotorN2_GpioPort = SIG_N2_GPIO_Port;
+	Setting_Motor.__MotorN2_Pin = SIG_N2_Pin;
 
 	Setting_Motor.__DeadTime_TIM = &htim1;
 
@@ -210,9 +210,44 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
+
+//  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+//  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
+//  DprintfInit(&huart1);
+//
+//  HAL_GPIO_WritePin(SIG_P2_GPIO_Port, SIG_P2_Pin, GPIO_PIN_SET);
+//
+//  while(true){
+//	  for(int i = 0; i < 100; i++){
+//		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, i);
+//		  Dprintf("%2d\r\n", i);
+//		  HAL_Delay(200);
+//	  }
+//  }
+//
+//  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
 
   Init(); //Init
+
+  while(true){
+	  for(int i = 0; i < 6000; i++){
+		  _MotorSetSpeed(_MOTOR_MODE_REVARCE, i*10);
+		  Dprintf("%2d\r\n", i);
+		  HAL_Delay(10);
+	  }
+
+	  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+	  HAL_Delay(1000);
+
+	  for(int i = 0; i < 6000; i++){
+	  		  _MotorSetSpeed(_MOTOR_MODE_FORWARD, i*10);
+	  		  Dprintf("%2d\r\n", i);
+	  		  HAL_Delay(10);
+	  	  }
+
+	  _MotorSetSpeed(_MOTOR_MODE_BREAK, 0);
+	  HAL_Delay(1000);
+  }
 
   Dprintf("Hello World!!\r\n");
   _ConsoleStartLogo();
@@ -412,7 +447,7 @@ static void MX_TIM2_Init(void)
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -457,7 +492,7 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_OC_Init(&htim3) != HAL_OK)
+  if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -467,11 +502,11 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_TIMING;
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_OC_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -614,11 +649,11 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SW_SH_LD_Pin|SW_CLK_Pin|LED_POWER_Pin|SIG_P1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SW_SH_LD_Pin|SW_CLK_Pin|LED_POWER_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SIG_P2_Pin|_7SEG_SCK_Pin|_7SEG_RCK_Pin|_7SEG_SI_Pin
-                          |LED_UART_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SIG_N2_Pin|SIG_N1_Pin|_7SEG_SCK_Pin|_7SEG_RCK_Pin
+                          |_7SEG_SI_Pin|LED_UART_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : SW_QH_Pin ROTARY_ENCODER_Z_Pin ROTARY_ENCODER_B_Pin ROTARY_ENCODER_A_Pin */
   GPIO_InitStruct.Pin = SW_QH_Pin|ROTARY_ENCODER_Z_Pin|ROTARY_ENCODER_B_Pin|ROTARY_ENCODER_A_Pin;
@@ -626,17 +661,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SW_SH_LD_Pin SW_CLK_Pin LED_POWER_Pin SIG_P1_Pin */
-  GPIO_InitStruct.Pin = SW_SH_LD_Pin|SW_CLK_Pin|LED_POWER_Pin|SIG_P1_Pin;
+  /*Configure GPIO pins : SW_SH_LD_Pin SW_CLK_Pin LED_POWER_Pin */
+  GPIO_InitStruct.Pin = SW_SH_LD_Pin|SW_CLK_Pin|LED_POWER_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SIG_P2_Pin _7SEG_SCK_Pin _7SEG_RCK_Pin _7SEG_SI_Pin
-                           LED_UART_Pin */
-  GPIO_InitStruct.Pin = SIG_P2_Pin|_7SEG_SCK_Pin|_7SEG_RCK_Pin|_7SEG_SI_Pin
-                          |LED_UART_Pin;
+  /*Configure GPIO pins : SIG_N2_Pin SIG_N1_Pin _7SEG_SCK_Pin _7SEG_RCK_Pin
+                           _7SEG_SI_Pin LED_UART_Pin */
+  GPIO_InitStruct.Pin = SIG_N2_Pin|SIG_N1_Pin|_7SEG_SCK_Pin|_7SEG_RCK_Pin
+                          |_7SEG_SI_Pin|LED_UART_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
