@@ -224,63 +224,17 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
-//  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-//  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-//  DprintfInit(&huart1);
-//
-//  HAL_GPIO_WritePin(SIG_P2_GPIO_Port, SIG_P2_Pin, GPIO_PIN_SET);
-//
-//  while(true){
-//	  for(int i = 0; i < 100; i++){
-//		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, i);
-//		  Dprintf("%2d\r\n", i);
-//		  HAL_Delay(200);
-//	  }
-//  }
-//
-//  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
+  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
 
   Init(); //Init
 
-  int _lastAngureVelocityInt = 0;
-  unsigned int _nowAngureVelocity;
-
-  _RotaryEncoder_ResetAngularVelocity();
-  Dprintf("Start Program\r\n");
+  _ROTARY_ENCODER_RESULT rotaryEncoderResult;
 
   while(true){
-	  _nowAngureVelocity = _RotaryEncoder_MesureAngularVelocity();
-
-//	  if((int)_nowAngureVelocity != _lastAngureVelocityInt){
-//		  _lastAngureVelocityInt = (int)_nowAngureVelocity;
-		  Dprintf("%u\r\n", _nowAngureVelocity);
-//	  }
-
+	  rotaryEncoderResult = _RotaryEncoder_Get1CyclePulse();
+	  Dprintf("%4u : %4u\r", rotaryEncoderResult._RotaryEncoder_PulseCount, rotaryEncoderResult._RotaryEncoder_SampleCount);
+	  HAL_Delay(50);
   }
-//
-//  while(true){
-//	  for(int i = 0; i < 6000; i++){
-//		  _MotorSetSpeed(_MOTOR_MODE_REVARCE, i*10);
-//		  Dprintf("%2d\r\n", i);
-//		  HAL_Delay(10);
-//	  }
-//
-//	  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
-//	  HAL_Delay(1000);
-//
-//	  for(int i = 0; i < 6000; i++){
-//	  		  _MotorSetSpeed(_MOTOR_MODE_FORWARD, i*10);
-//	  		  Dprintf("%2d\r\n", i);
-//	  		  HAL_Delay(10);
-//	  	  }
-//
-//	  _MotorSetSpeed(_MOTOR_MODE_BREAK, 0);
-//	  HAL_Delay(1000);
-//  }
-//
-//  Dprintf("Hello World!!\r\n");
-//  _ConsoleStartLogo();
 
   /* USER CODE END 2 */
 
@@ -401,7 +355,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 6-1;
+  htim1.Init.Prescaler = 60-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 0xffff-1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
