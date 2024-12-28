@@ -36,6 +36,7 @@ extern "C" {
 #include "D-M-005/Switch.h"
 #include "D-M-005/Utility.h"
 #include "D-M-005/Console/Console.h"
+#include "D-M-005/RotaryEncoder.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -64,6 +65,7 @@ void _Init_7Seg();
 void _Init_Motor();
 void _Init_Switch();
 void _Init_Console();
+void _Init_RotaryEncoder();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

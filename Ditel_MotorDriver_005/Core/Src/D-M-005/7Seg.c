@@ -150,7 +150,7 @@ void _7SegSetUpAnimation(_SETUP_STEP_FOR_7SEG __SetupStep){
 			__7Seg1byteDisplay(__7SEG_ONLY_C_1Byte);
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			break;
-		case _SETUP_STEP_NULL3:
+		case _SETUP_STEP_SETUP_ROTARY_ENCODER:
 			__7Seg1byteDisplay(__7SEG_ONLY_D_1Byte);
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			break;

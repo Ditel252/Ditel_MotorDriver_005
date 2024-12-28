@@ -45,7 +45,6 @@ CAN_HandleTypeDef hcan;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim15;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -55,6 +54,7 @@ _7SEG_SETTING Setting_7Seg;
 _MOTOR_SETTING Setting_Motor;
 _SWITCH_SETTING Setting_Swich;
 _CONSOLE_SETTING Setting_Console;
+_ROTARY_ENCODER_SETTING Setting_RotaryEncoder;
 
 _SWITCH_READ_DATA SwitchReadData;
 
@@ -69,7 +69,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
-static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 void Init(){
 	uint32_t _lastReadTick;
@@ -99,8 +98,11 @@ void Init(){
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_CONSOLE);
 
+	//Init Rotary Encoder
+	_Init_RotaryEncoder();
+
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
-	_7SegSetUpAnimation(_SETUP_STEP_NULL3);
+	_7SegSetUpAnimation(_SETUP_STEP_SETUP_ROTARY_ENCODER);
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL4);
@@ -166,6 +168,19 @@ void _Init_Console(){
 
 	_ConsoleInit(&Setting_Console);
 }
+
+void _Init_RotaryEncoder(){
+	Setting_RotaryEncoder.__RotaryEncoderA_GpioPort = ROTARY_ENCODER_A_GPIO_Port;
+	Setting_RotaryEncoder.__RotaryEncoderA_Pin = ROTARY_ENCODER_A_Pin;
+	Setting_RotaryEncoder.__RotaryEncoderB_GpioPort = ROTARY_ENCODER_B_GPIO_Port;
+	Setting_RotaryEncoder.__RotaryEncoderB_Pin = ROTARY_ENCODER_B_Pin;
+	Setting_RotaryEncoder.__RotaryEncoderZ_GpioPort = ROTARY_ENCODER_Z_GPIO_Port;
+	Setting_RotaryEncoder.__RotaryEncoderZ_Pin = ROTARY_ENCODER_Z_Pin;
+
+	Setting_RotaryEncoder.__MesureTime_TIM = &htim1;
+
+	_RotaryEncoderInit(&Setting_RotaryEncoder);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -208,7 +223,6 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM1_Init();
-  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
 
 //  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -229,28 +243,44 @@ int main(void)
 
   Init(); //Init
 
+  int _lastAngureVelocityInt = 0;
+  unsigned int _nowAngureVelocity;
+
+  _RotaryEncoder_ResetAngularVelocity();
+  Dprintf("Start Program\r\n");
+
   while(true){
-	  for(int i = 0; i < 6000; i++){
-		  _MotorSetSpeed(_MOTOR_MODE_REVARCE, i*10);
-		  Dprintf("%2d\r\n", i);
-		  HAL_Delay(10);
-	  }
+	  _nowAngureVelocity = _RotaryEncoder_MesureAngularVelocity();
 
-	  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
-	  HAL_Delay(1000);
+//	  if((int)_nowAngureVelocity != _lastAngureVelocityInt){
+//		  _lastAngureVelocityInt = (int)_nowAngureVelocity;
+		  Dprintf("%u\r\n", _nowAngureVelocity);
+//	  }
 
-	  for(int i = 0; i < 6000; i++){
-	  		  _MotorSetSpeed(_MOTOR_MODE_FORWARD, i*10);
-	  		  Dprintf("%2d\r\n", i);
-	  		  HAL_Delay(10);
-	  	  }
-
-	  _MotorSetSpeed(_MOTOR_MODE_BREAK, 0);
-	  HAL_Delay(1000);
   }
-
-  Dprintf("Hello World!!\r\n");
-  _ConsoleStartLogo();
+//
+//  while(true){
+//	  for(int i = 0; i < 6000; i++){
+//		  _MotorSetSpeed(_MOTOR_MODE_REVARCE, i*10);
+//		  Dprintf("%2d\r\n", i);
+//		  HAL_Delay(10);
+//	  }
+//
+//	  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+//	  HAL_Delay(1000);
+//
+//	  for(int i = 0; i < 6000; i++){
+//	  		  _MotorSetSpeed(_MOTOR_MODE_FORWARD, i*10);
+//	  		  Dprintf("%2d\r\n", i);
+//	  		  HAL_Delay(10);
+//	  	  }
+//
+//	  _MotorSetSpeed(_MOTOR_MODE_BREAK, 0);
+//	  HAL_Delay(1000);
+//  }
+//
+//  Dprintf("Hello World!!\r\n");
+//  _ConsoleStartLogo();
 
   /* USER CODE END 2 */
 
@@ -514,52 +544,6 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
-
-}
-
-/**
-  * @brief TIM15 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM15_Init(void)
-{
-
-  /* USER CODE BEGIN TIM15_Init 0 */
-
-  /* USER CODE END TIM15_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM15_Init 1 */
-
-  /* USER CODE END TIM15_Init 1 */
-  htim15.Instance = TIM15;
-  htim15.Init.Prescaler = 0;
-  htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim15.Init.Period = 65535;
-  htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim15.Init.RepetitionCounter = 0;
-  htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim15) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM15_Init 2 */
-
-  /* USER CODE END TIM15_Init 2 */
 
 }
 

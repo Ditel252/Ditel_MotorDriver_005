@@ -1,5 +1,6 @@
 "./Core/Src/D-M-005/7Seg.o"
 "./Core/Src/D-M-005/Motor.o"
+"./Core/Src/D-M-005/RotaryEncoder.o"
 "./Core/Src/D-M-005/Swtich.o"
 "./Core/Src/D-M-005/Utility.o"
 "./Core/Src/D-M-005/Console/Command.o"
