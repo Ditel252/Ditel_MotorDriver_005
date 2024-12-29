@@ -1,2 +1,2 @@
 ../Core/Src/D-M-005/RotaryEncoder.c:13:6:_RotaryEncoderInit	16	static
-../Core/Src/D-M-005/RotaryEncoder.c:24:24:_RotaryEncoder_Get1CyclePulse	24	static
+../Core/Src/D-M-005/RotaryEncoder.c:24:24:_RotaryEncoder_Get1Cycle_TimePeriod	16	static

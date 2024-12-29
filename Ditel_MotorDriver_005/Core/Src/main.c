@@ -231,8 +231,13 @@ int main(void)
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
 
   while(true){
-	  rotaryEncoderResult = _RotaryEncoder_Get1CyclePulse();
-	  Dprintf("%4u : %4u\r", rotaryEncoderResult._RotaryEncoder_PulseCount, rotaryEncoderResult._RotaryEncoder_SampleCount);
+	  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
+
+	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount)
+		  Dprintf("%6u\r", rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
+	  else
+		  Dprintf("   nan\r");
+
 	  HAL_Delay(50);
   }
 
@@ -355,7 +360,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 60-1;
+  htim1.Init.Prescaler = 6-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 0xffff-1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
