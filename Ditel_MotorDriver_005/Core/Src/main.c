@@ -229,14 +229,19 @@ int main(void)
   Init(); //Init
 
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
+  uint32_t StartTime, EndTime;
 
   while(true){
+	  StartTime = HAL_GetTick();
 	  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
+	  EndTime = HAL_GetTick();
 
 	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount)
-		  Dprintf("%6u\r", rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
+		  Dprintf(">w:%u\n", rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
 	  else
-		  Dprintf("   nan\r");
+		  Dprintf(">w:0\n");
+
+	  Dprintf(">Time:%u\n", EndTime - StartTime);
 
 	  HAL_Delay(50);
   }
