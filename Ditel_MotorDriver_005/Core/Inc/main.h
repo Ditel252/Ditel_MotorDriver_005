@@ -115,7 +115,7 @@ void _Init_PID();
 #define LED_UART_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define _CONTROL_LOOP_CYCLE 6	//[ms]
+#define _CONTROL_LOOP_CYCLE 10	//[ms]
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

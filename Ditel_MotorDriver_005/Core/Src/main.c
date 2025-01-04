@@ -246,48 +246,53 @@ int main(void)
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
   uint32_t _loopCheckCounter = 0;
 
-  uint16_t targetValue[10] = {3000, 10000, 7500, 5000, 12000, 6000, 15000, 175000, 4000, 8000};
+  uint16_t targetValue[10] = {13000, 12000, 14000, 15000, 12000, 16000, 15000, 17500, 14000, 0};
 
   _lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
   PidInfoAndResult.__IntegralOfdeviation = 0.0;
-  PidInfoAndResult.__LastDeviation = 0.0;
 
   while(true){
-	  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
+	  for(int i = 0; i < 10; i++){
+		  PidInfoAndResult._targetValue = targetValue[i];
+		  PidInfoAndResult.__LastDeviation = 0.0;
 
-	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
-		  PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
-		  Dprintf(">Control Amount:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
-  	  }else{
-  		  PidInfoAndResult._mesuredValue = 0;
-		  Dprintf(">Control Amount:0\n");
-  	  }
+		  for(int j = 0; j < 1000; j++){
+			  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
+			  Dprintf(">Target Value:%u\n", (uint16_t)(PidInfoAndResult._targetValue));
 
-	  PidInfoAndResult._targetValue = 10000.0;
+			  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
+				  PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
+				  Dprintf(">Control Amount:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
+			  }else{
+				  PidInfoAndResult._mesuredValue = 0;
+			  	  Dprintf(">Control Amount:0\n");
+			  }
 
-	  _PID(&PidInfoAndResult);
+			  _PID(&PidInfoAndResult);
 
-	  if(PidInfoAndResult._operationAmount > 60000.0){
-		  PidInfoAndResult._operationAmount = 60000.0;
-	  }else if(PidInfoAndResult._operationAmount < 0){
-		  PidInfoAndResult._operationAmount = 0.0;
+			  if(PidInfoAndResult._operationAmount > 60000.0){
+				  PidInfoAndResult._operationAmount = 60000.0;
+			  }else if(PidInfoAndResult._operationAmount < 0){
+				  PidInfoAndResult._operationAmount = 0.0;
+			  }
+
+			  Dprintf(">Operation Amount:%u\n", (uint16_t)PidInfoAndResult._operationAmount);
+
+			  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._operationAmount);
+
+			  _loopCheckCounter = 0;
+
+			  while((_readTimeForLoopCycle - _lastReadTimeForLoopCycle) < _CONTROL_LOOP_CYCLE){
+				  _readTimeForLoopCycle = HAL_GetTick();
+			  	  _loopCheckCounter++;
+			  }
+
+
+			  Dprintf(">Loop Check Counter:%u\n", _loopCheckCounter);
+
+			  _lastReadTimeForLoopCycle = _readTimeForLoopCycle;
+		  }
 	  }
-
-	  Dprintf(">Operation Amount:%u\n", (uint16_t)PidInfoAndResult._operationAmount);
-
-	  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._operationAmount);
-
-	  _loopCheckCounter = 0;
-
-	  while((_readTimeForLoopCycle - _lastReadTimeForLoopCycle) < _CONTROL_LOOP_CYCLE){
-		  _readTimeForLoopCycle = HAL_GetTick();
-		  _loopCheckCounter++;
-	  }
-
-
-	  Dprintf(">Loop Check Counter:%u\n", _loopCheckCounter);
-
-	  _lastReadTimeForLoopCycle = _readTimeForLoopCycle;
   }
 
   /* USER CODE END 2 */
