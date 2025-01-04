@@ -55,8 +55,10 @@ _MOTOR_SETTING Setting_Motor;
 _SWITCH_SETTING Setting_Swich;
 _CONSOLE_SETTING Setting_Console;
 _ROTARY_ENCODER_SETTING Setting_RotaryEncoder;
+_PID_SETTING Setting_PID;
 
 _SWITCH_READ_DATA SwitchReadData;
+_PID_INFOMATION_AND_RESULT PidInfoAndResult;
 
 /* USER CODE END PV */
 
@@ -104,8 +106,11 @@ void Init(){
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_ROTARY_ENCODER);
 
+	//Init PID
+	_Init_PID();
+
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
-	_7SegSetUpAnimation(_SETUP_STEP_NULL4);
+	_7SegSetUpAnimation(_SETUP_STEP_SETUP_PID);
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL5);
@@ -181,11 +186,21 @@ void _Init_RotaryEncoder(){
 
 	_RotaryEncoderInit(&Setting_RotaryEncoder);
 }
+
+void _Init_PID(){
+	Setting_PID._PID_Setting_Kp = 10.0;
+	Setting_PID._PID_Setting_Ki = 1.0;
+	Setting_PID._PID_Setting_Kd = 1.0;
+
+	Setting_PID._PID_Setting_loopCycleTime = 100;
+
+	_PidInit(&Setting_PID);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
 /* USER CODE END 0 */
 
 /**
@@ -230,20 +245,48 @@ int main(void)
 
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
   uint32_t StartTime, EndTime;
+  uint32_t _loopCheckCounter = 0;
+
+  _lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
 
   while(true){
 	  StartTime = HAL_GetTick();
 	  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
 	  EndTime = HAL_GetTick();
 
-	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount)
-		  Dprintf(">w:%u\n", rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
-	  else
+	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
+		  PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
+		  Dprintf(">w:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
+  	  }else{
+  		  PidInfoAndResult._mesuredValue = 0;
 		  Dprintf(">w:0\n");
+  	  }
+
+	  PidInfoAndResult._targetValue = 4000.0;
+
+	  _PID(&PidInfoAndResult);
+
+	  if(PidInfoAndResult._controlValue > 60000.0){
+		  PidInfoAndResult._controlValue = 60000.0;
+	  }else if(PidInfoAndResult._controlValue < 0){
+		  PidInfoAndResult._controlValue = 0.0;
+	  }
+
+	  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._controlValue);
 
 	  Dprintf(">Time:%u\n", EndTime - StartTime);
 
-	  HAL_Delay(50);
+	  _loopCheckCounter = 0;
+
+	  while((_readTimeForLoopCycle - _lastReadTimeForLoopCycle) < _CONTROL_LOOP_CYCLE){
+		  _readTimeForLoopCycle = HAL_GetTick();
+		  _loopCheckCounter++;
+	  }
+
+
+	  Dprintf(">Loop Check Counter:%u\n", _loopCheckCounter);
+
+	  _lastReadTimeForLoopCycle = _readTimeForLoopCycle;
   }
 
   /* USER CODE END 2 */

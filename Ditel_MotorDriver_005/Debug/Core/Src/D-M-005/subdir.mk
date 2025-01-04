@@ -7,6 +7,7 @@
 C_SRCS += \
 ../Core/Src/D-M-005/7Seg.c \
 ../Core/Src/D-M-005/Motor.c \
+../Core/Src/D-M-005/PID.c \
 ../Core/Src/D-M-005/RotaryEncoder.c \
 ../Core/Src/D-M-005/Swtich.c \
 ../Core/Src/D-M-005/Utility.c 
@@ -14,6 +15,7 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/D-M-005/7Seg.o \
 ./Core/Src/D-M-005/Motor.o \
+./Core/Src/D-M-005/PID.o \
 ./Core/Src/D-M-005/RotaryEncoder.o \
 ./Core/Src/D-M-005/Swtich.o \
 ./Core/Src/D-M-005/Utility.o 
@@ -21,6 +23,7 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/D-M-005/7Seg.d \
 ./Core/Src/D-M-005/Motor.d \
+./Core/Src/D-M-005/PID.d \
 ./Core/Src/D-M-005/RotaryEncoder.d \
 ./Core/Src/D-M-005/Swtich.d \
 ./Core/Src/D-M-005/Utility.d 
@@ -33,7 +36,7 @@ Core/Src/D-M-005/%.o Core/Src/D-M-005/%.su Core/Src/D-M-005/%.cyclo: ../Core/Src
 clean: clean-Core-2f-Src-2f-D-2d-M-2d-005
 
 clean-Core-2f-Src-2f-D-2d-M-2d-005:
-	-$(RM) ./Core/Src/D-M-005/7Seg.cyclo ./Core/Src/D-M-005/7Seg.d ./Core/Src/D-M-005/7Seg.o ./Core/Src/D-M-005/7Seg.su ./Core/Src/D-M-005/Motor.cyclo ./Core/Src/D-M-005/Motor.d ./Core/Src/D-M-005/Motor.o ./Core/Src/D-M-005/Motor.su ./Core/Src/D-M-005/RotaryEncoder.cyclo ./Core/Src/D-M-005/RotaryEncoder.d ./Core/Src/D-M-005/RotaryEncoder.o ./Core/Src/D-M-005/RotaryEncoder.su ./Core/Src/D-M-005/Swtich.cyclo ./Core/Src/D-M-005/Swtich.d ./Core/Src/D-M-005/Swtich.o ./Core/Src/D-M-005/Swtich.su ./Core/Src/D-M-005/Utility.cyclo ./Core/Src/D-M-005/Utility.d ./Core/Src/D-M-005/Utility.o ./Core/Src/D-M-005/Utility.su
+	-$(RM) ./Core/Src/D-M-005/7Seg.cyclo ./Core/Src/D-M-005/7Seg.d ./Core/Src/D-M-005/7Seg.o ./Core/Src/D-M-005/7Seg.su ./Core/Src/D-M-005/Motor.cyclo ./Core/Src/D-M-005/Motor.d ./Core/Src/D-M-005/Motor.o ./Core/Src/D-M-005/Motor.su ./Core/Src/D-M-005/PID.cyclo ./Core/Src/D-M-005/PID.d ./Core/Src/D-M-005/PID.o ./Core/Src/D-M-005/PID.su ./Core/Src/D-M-005/RotaryEncoder.cyclo ./Core/Src/D-M-005/RotaryEncoder.d ./Core/Src/D-M-005/RotaryEncoder.o ./Core/Src/D-M-005/RotaryEncoder.su ./Core/Src/D-M-005/Swtich.cyclo ./Core/Src/D-M-005/Swtich.d ./Core/Src/D-M-005/Swtich.o ./Core/Src/D-M-005/Swtich.su ./Core/Src/D-M-005/Utility.cyclo ./Core/Src/D-M-005/Utility.d ./Core/Src/D-M-005/Utility.o ./Core/Src/D-M-005/Utility.su
 
 .PHONY: clean-Core-2f-Src-2f-D-2d-M-2d-005
 

@@ -34,7 +34,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/D-M-005/Console/Console.h \
  ../Core/Inc/D-M-005/Console/Ditel_Printf.h \
  ../Core/Inc/D-M-005/Console/Command.h \
- ../Core/Inc/D-M-005/RotaryEncoder.h
+ ../Core/Inc/D-M-005/RotaryEncoder.h ../Core/Inc/D-M-005/PID.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
 ../Core/Inc/stm32f3xx_hal_conf.h:
@@ -74,3 +74,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/D-M-005/Console/Ditel_Printf.h:
 ../Core/Inc/D-M-005/Console/Command.h:
 ../Core/Inc/D-M-005/RotaryEncoder.h:
+../Core/Inc/D-M-005/PID.h:

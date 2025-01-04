@@ -37,6 +37,7 @@ extern "C" {
 #include "D-M-005/Utility.h"
 #include "D-M-005/Console/Console.h"
 #include "D-M-005/RotaryEncoder.h"
+#include "D-M-005/PID.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -66,6 +67,7 @@ void _Init_Motor();
 void _Init_Switch();
 void _Init_Console();
 void _Init_RotaryEncoder();
+void _Init_PID();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -113,7 +115,7 @@ void _Init_RotaryEncoder();
 #define LED_UART_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+#define _CONTROL_LOOP_CYCLE 5	//[ms]
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

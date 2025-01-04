@@ -154,7 +154,7 @@ void _7SegSetUpAnimation(_SETUP_STEP_FOR_7SEG __SetupStep){
 			__7Seg1byteDisplay(__7SEG_ONLY_D_1Byte);
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			break;
-		case _SETUP_STEP_NULL4:
+		case _SETUP_STEP_SETUP_PID:
 			__7Seg1byteDisplay(__7SEG_NULL_1Byte);
 			__7Seg1byteDisplay(__7SEG_ONLY_D_1Byte);
 			break;
