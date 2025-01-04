@@ -22,9 +22,10 @@ typedef struct{
 	double _targetValue;
 	double _mesuredValue;
 
-	double _controlValue;
+	double _operationAmount;
 
 	double __IntegralOfdeviation;
+	double __LastDeviation;
 }_PID_INFOMATION_AND_RESULT;
 
 void _PidInit(_PID_SETTING *);

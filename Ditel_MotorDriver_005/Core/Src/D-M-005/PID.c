@@ -19,15 +19,18 @@ void _PidInit(_PID_SETTING *__PidSetting){
 }
 
 void _PID(_PID_INFOMATION_AND_RESULT *__PidInfoAndResult){
-	double _Deviation;
+	double _Deviation, _DerivativeOfDeviation;
 
 	_Deviation = __PidInfoAndResult->_targetValue - __PidInfoAndResult->_mesuredValue;
+	_DerivativeOfDeviation = (_Deviation - __PidInfoAndResult->__LastDeviation) * 1000.0 / _PidSetting._PID_Setting_loopCycleTime;
 
 	__PidInfoAndResult->__IntegralOfdeviation = _Deviation * _PidSetting._PID_Setting_loopCycleTime / 1000.0 + __PidInfoAndResult->__IntegralOfdeviation;
 
 
-	__PidInfoAndResult->_controlValue = \
+	__PidInfoAndResult->_operationAmount = \
 			_PidSetting._PID_Setting_Kp * _Deviation + \
-			_PidSetting._PID_Setting_Ki * __PidInfoAndResult->__IntegralOfdeviation\
-			;
+			_PidSetting._PID_Setting_Ki * __PidInfoAndResult->__IntegralOfdeviation + \
+			_PidSetting._PID_Setting_Kd * _DerivativeOfDeviation;
+
+	__PidInfoAndResult->__LastDeviation = _Deviation;
 }

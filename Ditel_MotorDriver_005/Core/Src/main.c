@@ -189,8 +189,8 @@ void _Init_RotaryEncoder(){
 
 void _Init_PID(){
 	Setting_PID._PID_Setting_Kp = 2.0;
-	Setting_PID._PID_Setting_Ki = 1.0;
-	Setting_PID._PID_Setting_Kd = 1.0;
+	Setting_PID._PID_Setting_Ki = 5.0;
+	Setting_PID._PID_Setting_Kd = 0.05;
 
 	Setting_PID._PID_Setting_loopCycleTime = _CONTROL_LOOP_CYCLE;
 
@@ -244,40 +244,38 @@ int main(void)
   Init(); //Init
 
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
-  uint32_t StartTime, EndTime;
   uint32_t _loopCheckCounter = 0;
+
+  uint16_t targetValue[10] = {3000, 10000, 7500, 5000, 12000, 6000, 15000, 175000, 4000, 8000};
 
   _lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
   PidInfoAndResult.__IntegralOfdeviation = 0.0;
+  PidInfoAndResult.__LastDeviation = 0.0;
 
   while(true){
-	  StartTime = HAL_GetTick();
 	  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
-	  EndTime = HAL_GetTick();
 
 	  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
 		  PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
-		  Dprintf(">w:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
+		  Dprintf(">Control Amount:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
   	  }else{
   		  PidInfoAndResult._mesuredValue = 0;
-		  Dprintf(">w:0\n");
+		  Dprintf(">Control Amount:0\n");
   	  }
 
-	  PidInfoAndResult._targetValue = 4000.0;
+	  PidInfoAndResult._targetValue = 10000.0;
 
 	  _PID(&PidInfoAndResult);
 
-	  if(PidInfoAndResult._controlValue > 60000.0){
-		  PidInfoAndResult._controlValue = 60000.0;
-	  }else if(PidInfoAndResult._controlValue < 0){
-		  PidInfoAndResult._controlValue = 0.0;
+	  if(PidInfoAndResult._operationAmount > 60000.0){
+		  PidInfoAndResult._operationAmount = 60000.0;
+	  }else if(PidInfoAndResult._operationAmount < 0){
+		  PidInfoAndResult._operationAmount = 0.0;
 	  }
 
-	  Dprintf(">Control Value:%u\n", (uint16_t)PidInfoAndResult._controlValue);
+	  Dprintf(">Operation Amount:%u\n", (uint16_t)PidInfoAndResult._operationAmount);
 
-	  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._controlValue);
-
-	  Dprintf(">Time:%u\n", EndTime - StartTime);
+	  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._operationAmount);
 
 	  _loopCheckCounter = 0;
 
