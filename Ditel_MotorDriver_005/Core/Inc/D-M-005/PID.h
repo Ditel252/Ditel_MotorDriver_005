@@ -23,6 +23,8 @@ typedef struct{
 	double _mesuredValue;
 
 	double _controlValue;
+
+	double __IntegralOfdeviation;
 }_PID_INFOMATION_AND_RESULT;
 
 void _PidInit(_PID_SETTING *);

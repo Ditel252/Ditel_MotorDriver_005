@@ -188,11 +188,11 @@ void _Init_RotaryEncoder(){
 }
 
 void _Init_PID(){
-	Setting_PID._PID_Setting_Kp = 10.0;
+	Setting_PID._PID_Setting_Kp = 2.0;
 	Setting_PID._PID_Setting_Ki = 1.0;
 	Setting_PID._PID_Setting_Kd = 1.0;
 
-	Setting_PID._PID_Setting_loopCycleTime = 100;
+	Setting_PID._PID_Setting_loopCycleTime = _CONTROL_LOOP_CYCLE;
 
 	_PidInit(&Setting_PID);
 }
@@ -248,6 +248,7 @@ int main(void)
   uint32_t _loopCheckCounter = 0;
 
   _lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
+  PidInfoAndResult.__IntegralOfdeviation = 0.0;
 
   while(true){
 	  StartTime = HAL_GetTick();
@@ -271,6 +272,8 @@ int main(void)
 	  }else if(PidInfoAndResult._controlValue < 0){
 		  PidInfoAndResult._controlValue = 0.0;
 	  }
+
+	  Dprintf(">Control Value:%u\n", (uint16_t)PidInfoAndResult._controlValue);
 
 	  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._controlValue);
 
