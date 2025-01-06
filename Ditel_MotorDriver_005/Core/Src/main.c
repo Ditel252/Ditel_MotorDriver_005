@@ -196,6 +196,17 @@ void _Init_PID(){
 
 	_PidInit(&Setting_PID);
 }
+
+CAN_RxHeaderTypeDef RxHeader;
+uint8_t RxData[8];
+uint8_t RxCanFlag = 0;
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
+	if(HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK){
+		HAL_GPIO_TogglePin(LED_UART_GPIO_Port, LED_UART_Pin);
+		RxCanFlag = 1;
+	}
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -242,6 +253,45 @@ int main(void)
   HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET); //Power Led ON
 
   Init(); //Init
+
+  //Can Test Start
+
+  HAL_CAN_Start(&hcan);
+  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+
+  uint32_t filterId = 0b0001 << 21;
+  CAN_FilterTypeDef filter;
+  filter.FilterIdHigh = filterId >> 16;
+  filter.FilterIdLow = filterId;
+  filter.FilterMaskIdHigh = 0;
+  filter.FilterMaskIdLow = 0;
+  filter.FilterScale = CAN_FILTERSCALE_32BIT;
+  filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  filter.FilterBank = 0;
+  filter.FilterMode = CAN_FILTERMODE_IDLIST;
+  filter.SlaveStartFilterBank = 14;
+  filter.FilterActivation = ENABLE;
+  HAL_CAN_ConfigFilter(&hcan, &filter);
+
+  while(true){
+	  for(int i = 0; i < 100; i++){
+		  HAL_Delay(1);
+		  if(RxCanFlag == 1)
+			  break;
+	  }
+
+	  if(RxCanFlag == 1){
+		  RxCanFlag = 0;
+		  for(int i = 0; i < RxHeader.DLC; i++){
+			  _7SegDisplay(RxData[i], false);
+			  HAL_Delay(200);
+		  }
+	  }else{
+		  _7SegDisplay(0xEE, true);
+	  }
+  }
+
+  //Can Test End
 
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
   uint32_t _loopCheckCounter = 0;

@@ -68,6 +68,8 @@ void _Init_Switch();
 void _Init_Console();
 void _Init_RotaryEncoder();
 void _Init_PID();
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
