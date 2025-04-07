@@ -59,7 +59,9 @@ typedef enum {
 typedef	enum{
 	ERROR_INCORRECT_DATA_SIZE = 0xE0,
 	ERROR_INCORRECT_SPECIFIED_MOTOR_POWER = 0xE1,
-	ERROR_TIMEOUT = 0xE2
+	ERROR_TIMEOUT = 0xE2,
+	ERROR_INCORRECT_PID_GAIN = 0xE3,
+	ERROR_INCORRECT_COMMAND = 0xE4
 }_ERROR;
 /* USER CODE END ET */
 
@@ -142,6 +144,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 #define TIME_OUT_LENGTH 500 //[ms]
 #define CAN_DATA_SIZE 8
 #define COMMAND_DATA_SIZE 7
+
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

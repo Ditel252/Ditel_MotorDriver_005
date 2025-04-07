@@ -75,6 +75,9 @@ bool PID_isEnable = false;
 __MOTOR_MODE PID_nowMotorMode = _MOTOR_MODE_NEUTRAL;
 __MOTOR_MODE PID_lastMotorMode = _MOTOR_MODE_NEUTRAL;
 uint16_t PID_MotorValue = 0;
+_ROTARY_ENCODER_RESULT rotaryEncoderResult;
+uint32_t _loopCheckCounter = 0;
+uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
 
 /* USER CODE END PV */
 
@@ -236,17 +239,34 @@ void _Init_CAN(){
 	  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
+uint8_t DeriveUpper2digits(double _value){
+	_value *= 100.0;
+
+	uint16_t n = 0;
+
+	while(true){
+		if((int)(_value / pow(10.0, n)) == 0)
+			break;
+		n++;
+	}
+
+	if((_value / 100.0) >= 1.0)
+		return (uint8_t)(_value / (pow(10.0, n - 2) <= 0.0 ? 1.0 : pow(10.0, n - 2)));
+	else
+		return (uint8_t)(_value / (pow(10.0, n - 2) <= 0.0 ? 1.0 : pow(10.0, n - 2))) / 10;
+}
+
 void CommandIdentification(_COMMAND _command, uint8_t _data[]){
-	if(_command >= COMMAND_NORMAL_FORWARD && _command <= COMMAND_NORMAL_BRAKE){
+	if(_command >= COMMAND_NORMAL_FORWARD && _command <= COMMAND_NORMAL_BRAKE){	//Normal Mode
 		uint16_t _motorSpeed = (_data[0] << 8) | (_data[1] << 0);
 
 		if(_motorSpeed >= __MOTOR_MAX_SPEED){
 			_7SegDisplay(ERROR_INCORRECT_SPECIFIED_MOTOR_POWER, false);
-			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, _motorSpeed);
+			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
 			return;
 		}
 
-		switch(_command){
+		switch((uint8_t)_command){
 		case COMMAND_NORMAL_FORWARD:
 			_7SegDisplay((uint8_t)(_motorSpeed / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), false);
 			_MotorSetSpeed(_MOTOR_MODE_FORWARD, _motorSpeed);
@@ -259,20 +279,111 @@ void CommandIdentification(_COMMAND _command, uint8_t _data[]){
 
 		case COMMAND_NORMAL_NEUTRAL:
 			_7SegDisplay(__7SEG_MOTOR_MODE_NEUTRAL, false);
-			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, _motorSpeed);
+			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
 			break;
 
 		case COMMAND_NORMAL_BRAKE:
 			_7SegDisplay(__7SEG_MOTOR_MODE_BREAK, false);
-			_MotorSetSpeed(_MOTOR_MODE_BREAK, _motorSpeed);
+			_MotorSetSpeed(_MOTOR_MODE_BREAK, 0);
 			break;
 		}
+	}else if(_command >= COMMAND_PID_FORWARD && _command <= COMMAND_PID_BRAKE){	//PID Mode
+		PID_MotorValue = (_data[0] << 8) | (_data[1] << 0);
+
+		if(PID_MotorValue >= __MOTOR_MAX_SPEED){
+			_7SegDisplay(ERROR_INCORRECT_SPECIFIED_MOTOR_POWER, false);
+			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+			return;
+		}
+
+		PID_lastMotorMode = PID_nowMotorMode;
+		switch((uint8_t)_command){
+		case COMMAND_PID_FORWARD:
+			PID_nowMotorMode = _MOTOR_MODE_FORWARD;
+			_7SegDisplay((uint8_t)(PID_MotorValue / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), false);
+			break;
+		case COMMAND_PID_REVERSAL:
+			PID_nowMotorMode = _MOTOR_MODE_REVARCE;
+			_7SegDisplay((uint8_t)(PID_MotorValue / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), true);
+			break;
+		case COMMAND_PID_NEUTRAL:
+			PID_nowMotorMode = _MOTOR_MODE_NEUTRAL;
+			_7SegDisplay(__7SEG_MOTOR_MODE_NEUTRAL, false);
+			break;
+		case COMMAND_PID_BRAKE:
+			PID_nowMotorMode = _MOTOR_MODE_BREAK;
+			_7SegDisplay(__7SEG_MOTOR_MODE_BREAK, false);
+			break;
+		}
+
+		if(PID_lastMotorMode != PID_nowMotorMode){
+			_lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
+			PidInfoAndResult.__IntegralOfdeviation = 0.0;
+			PidInfoAndResult.__LastDeviation = 0.0;
+		}
+	}else if(_command == COMMAND_PID_SET_GAIN){
+		uint32_t _displayBeginTime;
+		double _Kp, _Ki, _Kd;
+		_Kp = ((double)((uint16_t)(_data[0] << 8) | (_data[1] << 0))) / 100.0;
+		_Ki = ((double)((uint16_t)(_data[2] << 8) | (_data[3] << 0))) / 100.0;
+		_Kd = ((double)((uint16_t)(_data[4] << 8) | (_data[5] << 0))) / 100.0;
+
+		if(_Kp < 0.0 || _Kp > PID_GAIN_MAX_VALUE){
+			_7SegDisplay(ERROR_INCORRECT_PID_GAIN, false);
+			return;
+		}else if(_Ki < 0.0 || _Ki > PID_GAIN_MAX_VALUE){
+			_7SegDisplay(ERROR_INCORRECT_PID_GAIN, false);
+			return;
+		}else if(_Kd < 0.0 || _Kd > PID_GAIN_MAX_VALUE){
+			_7SegDisplay(ERROR_INCORRECT_PID_GAIN, false);
+			return;
+		}
+
+		Setting_PID._PID_Setting_Kp = _Kp;
+		Setting_PID._PID_Setting_Ki = _Ki;
+		Setting_PID._PID_Setting_Kd = _Kd;
+
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Kp) % 10, (Setting_PID._PID_Setting_Kp < 100.0 && Setting_PID._PID_Setting_Kp >= 10.0));
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Kp) / 10, (Setting_PID._PID_Setting_Kp < 10.0 && Setting_PID._PID_Setting_Kp >= 0.1));
+		_displayBeginTime = HAL_GetTick();
+
+		while((HAL_GetTick() - _displayBeginTime) < 1000 && RxCanFlag == 0)
+			;
+
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Ki) % 10, (Setting_PID._PID_Setting_Ki < 100.0 && Setting_PID._PID_Setting_Ki >= 10));
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Ki) / 10, (Setting_PID._PID_Setting_Ki < 10.0 && Setting_PID._PID_Setting_Ki >= 0.1));
+		_displayBeginTime = HAL_GetTick();
+
+		while((HAL_GetTick() - _displayBeginTime) < 1000 && RxCanFlag == 0)
+			;
+
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Kd) % 10, (Setting_PID._PID_Setting_Kd < 100.0 && Setting_PID._PID_Setting_Kd >= 10));
+		_7SegDisplay1digit(DeriveUpper2digits(Setting_PID._PID_Setting_Kd) / 10, (Setting_PID._PID_Setting_Kd < 10.0 && Setting_PID._PID_Setting_Kd >= 0.1));
+		_displayBeginTime = HAL_GetTick();
+
+		while((HAL_GetTick() - _displayBeginTime) < 1000 && RxCanFlag == 0)
+			;
+	}else if(_command == COMMAND_PID_SET_CONDITION){
+		if(_data[0] == 0x00){
+			PID_isEnable = false;
+			_7SegDisplay1digit(0x00, false);
+			__7Seg1byteDisplay(~(0b00011111 | 0b00000000));
+		}else{
+			PID_isEnable = true;
+			_7SegDisplay1digit(0x01, false);
+			__7Seg1byteDisplay(~(0b00011111 | 0b00000000));
+
+			PID_lastMotorMode = PID_nowMotorMode;
+			_lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
+			PidInfoAndResult.__IntegralOfdeviation = 0.0;
+			PidInfoAndResult.__LastDeviation = 0.0;
+		}
+	}else{
+		_7SegDisplay(ERROR_INCORRECT_COMMAND, false);
+		_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
 	}
 }
 
-_ROTARY_ENCODER_RESULT rotaryEncoderResult;
-uint32_t _loopCheckCounter = 0;
-uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
 void PID_MotorControl(__MOTOR_MODE _targetMode, uint16_t __targetValue){
 	if(_targetMode == _MOTOR_MODE_NEUTRAL || _targetMode == _MOTOR_MODE_BREAK)
 		__targetValue = 0;
@@ -381,23 +492,23 @@ int main(void)
   lastCommandGetTime = HAL_GetTick();
 
   //Main Loop
-
-	_lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();	//TODO
-	PidInfoAndResult.__IntegralOfdeviation = 0.0;	//TODO
-
-	PidInfoAndResult.__LastDeviation = 0.0;	//TODO
-  while(true){
-	  PID_MotorControl(_MOTOR_MODE_FORWARD, 13000);
-  }
+//  while(true){
+//	  PID_MotorControl(_MOTOR_MODE_FORWARD, 13000);
+//  }
 
   while(true){
 	  while(!(RxCanFlag == 1)){
 		  if((HAL_GetTick() - lastCommandGetTime) > TIME_OUT_LENGTH){
 			  _7SegDisplay(ERROR_TIMEOUT, false);
 			  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+			  PID_isEnable = false;
 
 			  while(!(RxCanFlag == 1))
 				  ;
+		  }
+
+		  if(PID_isEnable){
+			  PID_MotorControl(PID_nowMotorMode, PID_MotorValue);
 		  }
 	  }
 

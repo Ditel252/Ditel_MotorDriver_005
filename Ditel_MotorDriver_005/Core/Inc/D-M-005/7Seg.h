@@ -51,6 +51,8 @@ void _7SegInit(_7SEG_SETTING *);
 void _7SegDisplay(uint8_t , bool);
 void _7SegReset();
 void _7SegSetUpAnimation(_SETUP_STEP_FOR_7SEG);
+void _7SegDisplay1digit(uint8_t _displayContent, bool isDisplayDp);
+void __7Seg1byteDisplay(uint8_t _displayContent);
 
 
 #endif /* INC_7SEG_H_ */

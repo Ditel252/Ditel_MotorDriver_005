@@ -127,6 +127,59 @@ void _7SegDisplay(uint8_t _displayContent, bool isDisplayDp){
     }
 }
 
+void _7SegDisplay1digit(uint8_t _displayContent, bool isDisplayDp){
+	switch(_displayContent){
+		case 0x00:
+		    __7Seg1byteDisplay(~(0b01110111 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x01:
+		    __7Seg1byteDisplay(~(0b01000001 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x02:
+		    __7Seg1byteDisplay(~(0b00111011 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x03:
+		    __7Seg1byteDisplay(~(0b01101011 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x04:
+		    __7Seg1byteDisplay(~(0b01001101 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x05:
+		    __7Seg1byteDisplay(~(0b01101110 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x06:
+		    __7Seg1byteDisplay(~(0b01111110 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x07:
+		    __7Seg1byteDisplay(~(0b01000111 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x08:
+		    __7Seg1byteDisplay(~(0b01111111 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x09:
+		    __7Seg1byteDisplay(~(0b01101111 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0A:
+		    __7Seg1byteDisplay(~(0b01011111 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0B:
+		    __7Seg1byteDisplay(~(0b01111100 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0C:
+		    __7Seg1byteDisplay(~(0b00110110 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0D:
+		    __7Seg1byteDisplay(~(0b01111001 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0E:
+		    __7Seg1byteDisplay(~(0b00111110 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+		case 0x0F:
+		    __7Seg1byteDisplay(~(0b00011110 | (isDisplayDp ? 0b10000000 : 0b00000000)));
+		    break;
+	}
+}
+
 void _7SegReset(){
     __7Seg1byteDisplay(~(0b00000000));
     __7Seg1byteDisplay(~(0b00000000));

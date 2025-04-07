@@ -13,3 +13,7 @@ static CAN can(PA_11, PA_12);
 
 void motorDriverSetup();    //通信開始(プログラム開始時に必ず実行)
 bool normalMotorDriverRotate(uint8_t _motorDriverAddress, uint8_t _mode, uint16_t _speed = NONE);    //ノーマルモード
+
+extern bool PIDMotorDriverRote(uint8_t _motorDriverAddress, uint8_t _mode, uint16_t _speed = NONE);    //PIDモード
+extern bool setPIDGain(uint8_t _motorDriverAddress, double PGain, double IGain, double DGain);  //PIDゲインの設定
+bool setPIDControlCondition(uint8_t _motorDriverAddress, bool isRequestEnable); //PIDコントロール有効無効化

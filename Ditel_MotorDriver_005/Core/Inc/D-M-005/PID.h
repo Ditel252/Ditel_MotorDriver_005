@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+#define PID_GAIN_MAX_VALUE 500
+
 typedef struct{
 	double _PID_Setting_Kp;
 	double _PID_Setting_Ki;
