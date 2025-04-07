@@ -7,7 +7,7 @@
 ../Core/Src/main.c:216:6:_Init_PID	1
 ../Core/Src/main.c:226:6:_Init_CAN	1
 ../Core/Src/main.c:244:9:DeriveUpper2digits	5
-../Core/Src/main.c:261:6:CommandIdentification	44
+../Core/Src/main.c:261:6:CommandIdentification	45
 ../Core/Src/main.c:399:6:PID_MotorControl	13
 ../Core/Src/main.c:456:6:HAL_CAN_RxFifo0MsgPendingCallback	2
 ../Core/Src/main.c:473:5:main	10

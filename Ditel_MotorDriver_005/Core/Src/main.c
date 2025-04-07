@@ -389,7 +389,7 @@ void CommandIdentification(_COMMAND _command, uint8_t _data[]){
 			PidInfoAndResult.__IntegralOfdeviation = 0.0;
 			PidInfoAndResult.__LastDeviation = 0.0;
 		}
-	}else{
+	}else if(lastError != ERROR_EXCEED_INTEGRAL_MAX){
 		lastError = ERROR_INCORRECT_COMMAND;
 		_7SegDisplay(ERROR_INCORRECT_COMMAND, false);
 		_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
@@ -443,7 +443,7 @@ void PID_MotorControl(__MOTOR_MODE _targetMode, uint16_t __targetValue){
 		Dprintf(">Integral Of deviation:%u\n", (uint16_t)(PidInfoAndResult.__IntegralOfdeviation));
 	}
 
-	if(PidInfoAndResult.__IntegralOfdeviation > PID_MAX_INTEGRAL_OF_DEBIATION){
+	if((uint16_t)PidInfoAndResult.__IntegralOfdeviation > PID_MAX_INTEGRAL_OF_DEBIATION){
 		lastError = ERROR_EXCEED_INTEGRAL_MAX;
 		_7SegDisplay(ERROR_EXCEED_INTEGRAL_MAX, false);
 		_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
