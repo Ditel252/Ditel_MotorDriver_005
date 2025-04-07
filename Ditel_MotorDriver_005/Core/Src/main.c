@@ -60,6 +60,8 @@ _PID_SETTING Setting_PID;
 _SWITCH_READ_DATA SwitchReadData;
 _PID_INFOMATION_AND_RESULT PidInfoAndResult;
 
+CAN_FilterTypeDef canFilter;
+
 uint8_t myAddress;
 
 /* USER CODE END PV */
@@ -116,8 +118,11 @@ void Init(){
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_PID);
 
+	//Init CAN
+	_Init_CAN();
+
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
-	_7SegSetUpAnimation(_SETUP_STEP_NULL5);
+	_7SegSetUpAnimation(_SETUP_STEP_SETUO_CAN);
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_NULL6);
@@ -201,6 +206,24 @@ void _Init_PID(){
 	_PidInit(&Setting_PID);
 }
 
+void _Init_CAN(){
+	  uint32_t filterId = myAddress << 21;
+	  canFilter.FilterIdHigh = filterId >> 16;
+	  canFilter.FilterIdLow = filterId;
+	  canFilter.FilterMaskIdHigh = 0;
+	  canFilter.FilterMaskIdLow = 0;
+	  canFilter.FilterScale = CAN_FILTERSCALE_32BIT;
+	  canFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	  canFilter.FilterBank = 0;
+	  canFilter.FilterMode = CAN_FILTERMODE_IDLIST;
+	  canFilter.SlaveStartFilterBank = 14;
+	  canFilter.FilterActivation = ENABLE;
+	  HAL_CAN_ConfigFilter(&hcan, &canFilter);
+
+	  HAL_CAN_Start(&hcan);
+	  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+}
+
 CAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
 uint8_t RxCanFlag = 0;
@@ -262,23 +285,6 @@ int main(void)
   _7SegDisplay(myAddress, false);	//Display my Address
 
   //Can Test Start
-
-  HAL_CAN_Start(&hcan);
-  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
-
-  uint32_t filterId = 0b0001 << 21;
-  CAN_FilterTypeDef filter;
-  filter.FilterIdHigh = filterId >> 16;
-  filter.FilterIdLow = filterId;
-  filter.FilterMaskIdHigh = 0;
-  filter.FilterMaskIdLow = 0;
-  filter.FilterScale = CAN_FILTERSCALE_32BIT;
-  filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  filter.FilterBank = 0;
-  filter.FilterMode = CAN_FILTERMODE_IDLIST;
-  filter.SlaveStartFilterBank = 14;
-  filter.FilterActivation = ENABLE;
-  HAL_CAN_ConfigFilter(&hcan, &filter);
 
   while(true){
 	  for(int i = 0; i < 100; i++){
