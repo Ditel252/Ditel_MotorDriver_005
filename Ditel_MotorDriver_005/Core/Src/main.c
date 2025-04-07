@@ -60,6 +60,8 @@ _PID_SETTING Setting_PID;
 _SWITCH_READ_DATA SwitchReadData;
 _PID_INFOMATION_AND_RESULT PidInfoAndResult;
 
+uint8_t myAddress;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +95,8 @@ void Init(){
 
 	_lastReadTick = _AccurateDelay(200, _lastReadTick);
 	_7SegSetUpAnimation(_SETUP_STEP_SETUP_AND_READ_SWICH);
+
+	myAddress = SwitchReadData._Address;	//get my Address
 
 	//Init Console
 	_Init_Console();
@@ -211,6 +215,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
 /* USER CODE END 0 */
 
@@ -254,6 +259,8 @@ int main(void)
 
   Init(); //Init
 
+  _7SegDisplay(myAddress, false);	//Display my Address
+
   //Can Test Start
 
   HAL_CAN_Start(&hcan);
@@ -287,7 +294,7 @@ int main(void)
 			  HAL_Delay(200);
 		  }
 	  }else{
-		  _7SegDisplay(0xEE, true);
+//		  _7SegDisplay(0xEE, true);
 	  }
   }
 

@@ -1,25 +1,15 @@
 #include <mbed.h>
 
-#define MOTOR_FORWARD   0xA0
-#define MOTOR_REVERSAL  0xA1
-#define MOTOR_NEUTRAL   0xA2
-#define MOTOR_BRAKE     0xA3
-#define NONE 0
+#define SEND_DATA_SIZE 8
 
-CAN can(PA_11, PA_12);
+#define MOTOR_FORWARD   0x0
+#define MOTOR_REVERSAL  0x1
+#define MOTOR_NEUTRAL   0x2
+#define MOTOR_BRAKE     0x3
 
-void motorDriverSetup(){
-    can.frequency(1000000);
-}
+#define NONE 0x00
 
-bool motorDriverRotate(uint8_t _motorDriverAddress, uint8_t _mode, uint8_t _speed = NONE){
-    uint8_t canSendData[2];
+static CAN can(PA_11, PA_12);
 
-    canSendData[0] = _mode;
-    canSendData[1] = _speed;
-
-    if(can.write(CANMessage(_motorDriverAddress, canSendData, 2)))
-        return true;
-    else
-        return false;
-}
+void motorDriverSetup();    //通信開始(プログラム開始時に必ず実行)
+bool normalMotorDriverRotate(uint8_t _motorDriverAddress, uint8_t _mode, uint16_t _speed = NONE);    //ノーマルモード

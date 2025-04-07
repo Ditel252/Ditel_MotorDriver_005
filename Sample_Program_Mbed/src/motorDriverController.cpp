@@ -1,0 +1,47 @@
+#include "motorDriverController.hpp"
+
+#define NORMAL_FORWARD   0x10
+#define NORMAL_REVERSAL  0x11
+#define NORMAL_NEUTRAL   0x12
+#define NORMAL_BRAKE     0x13
+
+uint8_t canSendData[SEND_DATA_SIZE];
+
+extern void motorDriverSetup(){
+    can.frequency(1000000);
+}
+
+extern bool normalMotorDriverRotate(uint8_t _motorDriverAddress, uint8_t _mode, uint16_t _speed){
+    for(uint8_t _i = 0; _i < SEND_DATA_SIZE; _i++)
+        canSendData[_i] = NONE;
+
+    switch (_mode)
+    {
+    case MOTOR_FORWARD:
+        canSendData[0] = NORMAL_FORWARD;
+        break;
+        
+    case MOTOR_REVERSAL:
+        canSendData[0] = NORMAL_REVERSAL;
+        break;
+
+    case MOTOR_NEUTRAL:
+        canSendData[0] = NORMAL_NEUTRAL;
+        break;
+
+    case MOTOR_BRAKE:
+        canSendData[0] = NORMAL_BRAKE;
+        break;
+    
+    default:
+        return false;
+    }
+
+    canSendData[1] = (_speed & 0xFF00) >> 8;
+    canSendData[2] = (_speed & 0x00FF) >> 0;
+
+    if(can.write(CANMessage(_motorDriverAddress, canSendData, 8)))
+        return true;
+    else
+        return false;
+}
