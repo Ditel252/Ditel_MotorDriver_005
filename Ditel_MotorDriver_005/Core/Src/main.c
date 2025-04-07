@@ -512,12 +512,12 @@ int main(void)
 
   lastCommandGetTime = HAL_GetTick();
 
-  //Main Loop
-//  while(true){
-//	  PID_MotorControl(_MOTOR_MODE_FORWARD, 13000);
-//  }
+  /* USER CODE END 2 */
 
-  while(true){
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
 	  while(!(RxCanFlag == 1)){
 		  if((HAL_GetTick() - lastCommandGetTime) > TIME_OUT_LENGTH){
 			  if(lastError != ERROR_EXCEED_INTEGRAL_MAX){
@@ -556,91 +556,6 @@ int main(void)
 	  }
 
 	  CommandIdentification(RxData[0], commandData);
-  }
-
-  //Can Test Start
-
-  while(true){
-	  for(int i = 0; i < 100; i++){
-		  HAL_Delay(1);
-		  if(RxCanFlag == 1)
-			  break;
-	  }
-
-	  if(RxCanFlag == 1){
-		  RxCanFlag = 0;
-		  for(int i = 0; i < RxHeader.DLC; i++){
-			  _7SegDisplay(RxData[i], false);
-			  HAL_Delay(200);
-		  }
-	  }else{
-//		  _7SegDisplay(0xEE, true);
-	  }
-  }
-
-  //Can Test End
-  _ROTARY_ENCODER_RESULT rotaryEncoderResult;
-  uint32_t _loopCheckCounter = 0;
-
-  uint16_t targetValue[10] = {13000, 12000, 14000, 15000, 12000, 16000, 15000, 17500, 14000, 0};
-
-  _lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();
-  PidInfoAndResult.__IntegralOfdeviation = 0.0;
-
-  while(true){
-	  for(int i = 0; i < 10; i++){
-		  PidInfoAndResult._targetValue = targetValue[i];
-		  PidInfoAndResult.__LastDeviation = 0.0;
-
-		  for(int j = 0; j < 1000; j++){
-			  rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
-			  Dprintf(">Target Value:%u\n", (uint16_t)(PidInfoAndResult._targetValue));
-
-			  if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
-				  PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
-				  Dprintf(">Control Amount:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
-			  }else{
-				  PidInfoAndResult._mesuredValue = 0;
-			  	  Dprintf(">Control Amount:0\n");
-			  }
-
-			  _PID(&PidInfoAndResult);
-
-			  if(PidInfoAndResult._operationAmount > 60000.0){
-				  PidInfoAndResult._operationAmount = 60000.0;
-			  }else if(PidInfoAndResult._operationAmount < 0){
-				  PidInfoAndResult._operationAmount = 0.0;
-			  }
-
-			  Dprintf(">Operation Amount:%u\n", (uint16_t)PidInfoAndResult._operationAmount);
-
-			  _MotorSetSpeed(_MOTOR_MODE_FORWARD, (uint16_t)PidInfoAndResult._operationAmount);
-
-			  _loopCheckCounter = 0;
-
-			  while((_readTimeForLoopCycle - _lastReadTimeForLoopCycle) < _CONTROL_LOOP_CYCLE){
-				  _readTimeForLoopCycle = HAL_GetTick();
-			  	  _loopCheckCounter++;
-			  }
-
-
-			  Dprintf(">Loop Check Counter:%u\n", _loopCheckCounter);
-
-			  _lastReadTimeForLoopCycle = _readTimeForLoopCycle;
-		  }
-	  }
-  }
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  _ConsoleCommandRead();
-	  Dprintf("Command : %d\r\n", _ConsoleCommandResult._command);
-	  Dprintf("Mode    : %d\r\n", _ConsoleCommandResult._mode);
-	  Dprintf("Argument: %u\r\n", _ConsoleCommandResult._argument);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

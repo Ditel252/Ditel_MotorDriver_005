@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0000b070  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000141e8  00000000  00000000  0000b0a0  2**0
+ 13 .debug_info   00014171  00000000  00000000  0000b0a0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000031d8  00000000  00000000  0001f288  2**0
+ 14 .debug_abbrev 000031ad  00000000  00000000  0001f211  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00001038  00000000  00000000  00022460  2**3
+ 15 .debug_aranges 00001038  00000000  00000000  000223c0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000cb6  00000000  00000000  00023498  2**0
+ 16 .debug_rnglists 00000cb6  00000000  00000000  000233f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0001dca7  00000000  00000000  0002414e  2**0
+ 17 .debug_macro  0001dca7  00000000  00000000  000240ae  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00017ed5  00000000  00000000  00041df5  2**0
+ 18 .debug_line   00017ed5  00000000  00000000  00041d55  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000a8f42  00000000  00000000  00059cca  2**0
+ 19 .debug_str    000a8f42  00000000  00000000  00059c2a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  00102c0c  2**0
+ 20 .comment      00000043  00000000  00000000  00102b6c  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00004bcc  00000000  00000000  00102c50  2**2
+ 21 .debug_frame  00004bcc  00000000  00000000  00102bb0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000006a  00000000  00000000  0010781c  2**0
+ 22 .debug_line_str 0000006a  00000000  00000000  0010777c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -5834,7 +5834,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
 int main(void)
 {
  8003070:	b580      	push	{r7, lr}
- 8003072:	b088      	sub	sp, #32
+ 8003072:	b082      	sub	sp, #8
  8003074:	af00      	add	r7, sp, #0
   /* USER CODE END 1 */
 
@@ -5895,11 +5895,11 @@ int main(void)
  80030c4:	4603      	mov	r3, r0
  80030c6:	4a3a      	ldr	r2, [pc, #232]	@ (80031b0 <main+0x140>)
  80030c8:	6013      	str	r3, [r2, #0]
-//  while(true){
-//	  PID_MotorControl(_MOTOR_MODE_FORWARD, 13000);
-//  }
 
-  while(true){
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
 	  while(!(RxCanFlag == 1)){
  80030ca:	e02b      	b.n	8003124 <main+0xb4>
 		  if((HAL_GetTick() - lastCommandGetTime) > TIME_OUT_LENGTH){
@@ -5971,18 +5971,18 @@ int main(void)
 
 	  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
  8003136:	2300      	movs	r3, #0
- 8003138:	77bb      	strb	r3, [r7, #30]
+ 8003138:	71fb      	strb	r3, [r7, #7]
  800313a:	e006      	b.n	800314a <main+0xda>
 		  commandData[_i] = 0;
- 800313c:	7fbb      	ldrb	r3, [r7, #30]
+ 800313c:	79fb      	ldrb	r3, [r7, #7]
  800313e:	4a22      	ldr	r2, [pc, #136]	@ (80031c8 <main+0x158>)
  8003140:	2100      	movs	r1, #0
  8003142:	54d1      	strb	r1, [r2, r3]
 	  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
- 8003144:	7fbb      	ldrb	r3, [r7, #30]
+ 8003144:	79fb      	ldrb	r3, [r7, #7]
  8003146:	3301      	adds	r3, #1
- 8003148:	77bb      	strb	r3, [r7, #30]
- 800314a:	7fbb      	ldrb	r3, [r7, #30]
+ 8003148:	71fb      	strb	r3, [r7, #7]
+ 800314a:	79fb      	ldrb	r3, [r7, #7]
  800314c:	2b06      	cmp	r3, #6
  800314e:	d9f5      	bls.n	800313c <main+0xcc>
 
@@ -6018,21 +6018,21 @@ int main(void)
 		  }else{
 			  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
  800317e:	2300      	movs	r3, #0
- 8003180:	77fb      	strb	r3, [r7, #31]
+ 8003180:	71bb      	strb	r3, [r7, #6]
  8003182:	e009      	b.n	8003198 <main+0x128>
 				  commandData[_i] = RxData[_i + 1];
- 8003184:	7ffb      	ldrb	r3, [r7, #31]
+ 8003184:	79bb      	ldrb	r3, [r7, #6]
  8003186:	1c5a      	adds	r2, r3, #1
- 8003188:	7ffb      	ldrb	r3, [r7, #31]
+ 8003188:	79bb      	ldrb	r3, [r7, #6]
  800318a:	4911      	ldr	r1, [pc, #68]	@ (80031d0 <main+0x160>)
  800318c:	5c89      	ldrb	r1, [r1, r2]
  800318e:	4a0e      	ldr	r2, [pc, #56]	@ (80031c8 <main+0x158>)
  8003190:	54d1      	strb	r1, [r2, r3]
 			  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
- 8003192:	7ffb      	ldrb	r3, [r7, #31]
+ 8003192:	79bb      	ldrb	r3, [r7, #6]
  8003194:	3301      	adds	r3, #1
- 8003196:	77fb      	strb	r3, [r7, #31]
- 8003198:	7ffb      	ldrb	r3, [r7, #31]
+ 8003196:	71bb      	strb	r3, [r7, #6]
+ 8003198:	79bb      	ldrb	r3, [r7, #6]
  800319a:	2b06      	cmp	r3, #6
  800319c:	d9f2      	bls.n	8003184 <main+0x114>
 		  }
