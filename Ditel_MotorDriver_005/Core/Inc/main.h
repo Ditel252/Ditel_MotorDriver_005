@@ -42,7 +42,25 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef enum {
+	COMMAND_NORMAL_FORWARD		= 0x10,
+	COMMAND_NORMAL_REVERSAL		= 0x11,
+	COMMAND_NORMAL_NEUTRAL		= 0x12,
+	COMMAND_NORMAL_BRAKE		= 0x13,
 
+	COMMAND_PID_FORWARD			= 0x30,
+	COMMAND_PID_REVERSAL		= 0x31,
+	COMMAND_PID_NEUTRAL			= 0x32,
+	COMMAND_PID_BRAKE			= 0x33,
+	COMMAND_PID_SET_GAIN		= 0x3A,
+	COMMAND_PID_SET_CONDITION 	= 0x3B
+}_COMMAND;
+
+typedef	enum{
+	ERROR_INCORRECT_DATA_SIZE = 0xE0,
+	ERROR_INCORRECT_SPECIFIED_MOTOR_POWER = 0xE1,
+	ERROR_TIMEOUT = 0xE2
+}_ERROR;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -69,6 +87,7 @@ void _Init_Console();
 void _Init_RotaryEncoder();
 void _Init_PID();
 void _Init_CAN();
+void CommandIdentification(_COMMAND _command, uint8_t _data[]);
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 /* USER CODE END EFP */
@@ -119,6 +138,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 
 /* USER CODE BEGIN Private defines */
 #define _CONTROL_LOOP_CYCLE 10	//[ms]
+
+#define TIME_OUT_LENGTH 500 //[ms]
+#define CAN_DATA_SIZE 8
+#define COMMAND_DATA_SIZE 7
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

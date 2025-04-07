@@ -63,6 +63,18 @@ _PID_INFOMATION_AND_RESULT PidInfoAndResult;
 CAN_FilterTypeDef canFilter;
 
 uint8_t myAddress;
+uint8_t commandData[7];
+uint32_t lastCommandGetTime;
+
+CAN_RxHeaderTypeDef RxHeader;
+uint8_t RxData[8];
+uint8_t RxCanFlag = 0;
+
+bool PID_ConsolDebug = true;
+bool PID_isEnable = false;
+__MOTOR_MODE PID_nowMotorMode = _MOTOR_MODE_NEUTRAL;
+__MOTOR_MODE PID_lastMotorMode = _MOTOR_MODE_NEUTRAL;
+uint16_t PID_MotorValue = 0;
 
 /* USER CODE END PV */
 
@@ -224,9 +236,90 @@ void _Init_CAN(){
 	  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
-CAN_RxHeaderTypeDef RxHeader;
-uint8_t RxData[8];
-uint8_t RxCanFlag = 0;
+void CommandIdentification(_COMMAND _command, uint8_t _data[]){
+	if(_command >= COMMAND_NORMAL_FORWARD && _command <= COMMAND_NORMAL_BRAKE){
+		uint16_t _motorSpeed = (_data[0] << 8) | (_data[1] << 0);
+
+		if(_motorSpeed >= __MOTOR_MAX_SPEED){
+			_7SegDisplay(ERROR_INCORRECT_SPECIFIED_MOTOR_POWER, false);
+			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, _motorSpeed);
+			return;
+		}
+
+		switch(_command){
+		case COMMAND_NORMAL_FORWARD:
+			_7SegDisplay((uint8_t)(_motorSpeed / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), false);
+			_MotorSetSpeed(_MOTOR_MODE_FORWARD, _motorSpeed);
+			break;
+
+		case COMMAND_NORMAL_REVERSAL:
+			_7SegDisplay((uint8_t)(_motorSpeed / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), true);
+			_MotorSetSpeed(_MOTOR_MODE_REVARCE, _motorSpeed);
+			break;
+
+		case COMMAND_NORMAL_NEUTRAL:
+			_7SegDisplay(__7SEG_MOTOR_MODE_NEUTRAL, false);
+			_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, _motorSpeed);
+			break;
+
+		case COMMAND_NORMAL_BRAKE:
+			_7SegDisplay(__7SEG_MOTOR_MODE_BREAK, false);
+			_MotorSetSpeed(_MOTOR_MODE_BREAK, _motorSpeed);
+			break;
+		}
+	}
+}
+
+_ROTARY_ENCODER_RESULT rotaryEncoderResult;
+uint32_t _loopCheckCounter = 0;
+uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
+void PID_MotorControl(__MOTOR_MODE _targetMode, uint16_t __targetValue){
+	if(_targetMode == _MOTOR_MODE_NEUTRAL || _targetMode == _MOTOR_MODE_BREAK)
+		__targetValue = 0;
+
+	PidInfoAndResult._targetValue = __targetValue;
+
+	rotaryEncoderResult = _RotaryEncoder_Get1Cycle_TimePeriod();
+
+	if(PID_ConsolDebug)
+		Dprintf(">Target Value:%u\n", (uint16_t)(PidInfoAndResult._targetValue));
+
+	if(rotaryEncoderResult._isSuccessGet1CycleTimePerioCount){
+		PidInfoAndResult._mesuredValue = (10000000.0 / (double)rotaryEncoderResult._RotaryEncoder_1CycleTimePeriodCount);
+
+		if(PID_ConsolDebug)
+			Dprintf(">Control Amount:%u\n", (uint16_t)(PidInfoAndResult._mesuredValue));
+	}else{
+		PidInfoAndResult._mesuredValue = 0;
+		if(PID_ConsolDebug)
+			Dprintf(">Control Amount:0\n");
+	}
+
+	_PID(&PidInfoAndResult);
+
+	if(PidInfoAndResult._operationAmount > 60000.0){
+		PidInfoAndResult._operationAmount = 60000.0;
+	}else if(PidInfoAndResult._operationAmount < 0){
+		PidInfoAndResult._operationAmount = 0.0;
+	}
+
+	if(PID_ConsolDebug)
+		  Dprintf(">Operation Amount:%u\n", (uint16_t)PidInfoAndResult._operationAmount);
+
+	_MotorSetSpeed(_targetMode, (uint16_t)PidInfoAndResult._operationAmount);
+
+	_loopCheckCounter = 0;
+
+	while((_readTimeForLoopCycle - _lastReadTimeForLoopCycle) < _CONTROL_LOOP_CYCLE){
+		_readTimeForLoopCycle = HAL_GetTick();
+		_loopCheckCounter++;
+	}
+
+	if(PID_ConsolDebug)
+		Dprintf(">Loop Check Counter:%u\n", _loopCheckCounter);
+
+	_lastReadTimeForLoopCycle = _readTimeForLoopCycle;
+}
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
 	if(HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK){
@@ -239,7 +332,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint32_t _readTimeForLoopCycle, _lastReadTimeForLoopCycle;
 /* USER CODE END 0 */
 
 /**
@@ -284,6 +376,52 @@ int main(void)
 
   _7SegDisplay(myAddress, false);	//Display my Address
 
+  HAL_Delay(2000);
+
+  lastCommandGetTime = HAL_GetTick();
+
+  //Main Loop
+
+	_lastReadTimeForLoopCycle = _readTimeForLoopCycle = HAL_GetTick();	//TODO
+	PidInfoAndResult.__IntegralOfdeviation = 0.0;	//TODO
+
+	PidInfoAndResult.__LastDeviation = 0.0;	//TODO
+  while(true){
+	  PID_MotorControl(_MOTOR_MODE_FORWARD, 13000);
+  }
+
+  while(true){
+	  while(!(RxCanFlag == 1)){
+		  if((HAL_GetTick() - lastCommandGetTime) > TIME_OUT_LENGTH){
+			  _7SegDisplay(ERROR_TIMEOUT, false);
+			  _MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+
+			  while(!(RxCanFlag == 1))
+				  ;
+		  }
+	  }
+
+	  lastCommandGetTime = HAL_GetTick();
+
+	  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
+		  commandData[_i] = 0;
+
+	  if(RxCanFlag == 1){
+		  RxCanFlag = 0;
+
+		  if(RxHeader.DLC != CAN_DATA_SIZE){
+		  	_7SegDisplay(ERROR_INCORRECT_DATA_SIZE, false);
+		  	_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+		  	continue;
+		  }else{
+			  for(uint8_t _i = 0; _i < COMMAND_DATA_SIZE; _i++)
+				  commandData[_i] = RxData[_i + 1];
+		  }
+	  }
+
+	  CommandIdentification(RxData[0], commandData);
+  }
+
   //Can Test Start
 
   while(true){
@@ -305,7 +443,6 @@ int main(void)
   }
 
   //Can Test End
-
   _ROTARY_ENCODER_RESULT rotaryEncoderResult;
   uint32_t _loopCheckCounter = 0;
 
