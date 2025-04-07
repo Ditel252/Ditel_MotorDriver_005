@@ -61,7 +61,7 @@ int main(void){
             ThisThread::sleep_for(100ms);
         }
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 50; i++){
             PIDMotorDriverRote(0b0001, MOTOR_FORWARD, 15000);
             ThisThread::sleep_for(100ms);
         }
@@ -79,7 +79,7 @@ int main(void){
             ThisThread::sleep_for(100ms);
         }
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 50; i++){
             PIDMotorDriverRote(0b0001, MOTOR_REVERSAL, 15000);
             ThisThread::sleep_for(100ms);
         }
