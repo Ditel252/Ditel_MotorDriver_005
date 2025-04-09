@@ -83,7 +83,11 @@ uint8_t lastError = 0x00;
 
 __MOTOR_MODE nowMotorMode = _MOTOR_MODE_NEUTRAL;
 uint16_t nowMotorSpeed = 0;
-uint16_t nowMotorSpeedRef = 0;
+uint32_t nowMotorSpeedRef = 0;
+
+__MOTOR_MODE refMotorMode_not_PID = _MOTOR_MODE_NEUTRAL;
+uint16_t refMotorSpeed_not_PID = 0;
+
 
 /* USER CODE END PV */
 
@@ -270,29 +274,34 @@ void CommandIdentification(_COMMAND _command, uint8_t _data[]){
 		if(_motorSpeed >= __MOTOR_MAX_SPEED){
 			lastError = ERROR_INCORRECT_SPECIFIED_MOTOR_POWER;
 			_7SegDisplay(ERROR_INCORRECT_SPECIFIED_MOTOR_POWER, false);
-			Motor_SetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+			refMotorMode_not_PID = _MOTOR_MODE_NEUTRAL;
+			refMotorSpeed_not_PID = 0;
 			return;
 		}
 
 		switch((uint8_t)_command){
 		case COMMAND_NORMAL_FORWARD:
 			_7SegDisplay((uint8_t)(_motorSpeed / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), false);
-			Motor_SetSpeed(_MOTOR_MODE_FORWARD, _motorSpeed);
+			refMotorMode_not_PID = _MOTOR_MODE_FORWARD;
+			refMotorSpeed_not_PID = _motorSpeed;
 			break;
 
 		case COMMAND_NORMAL_REVERSAL:
 			_7SegDisplay((uint8_t)(_motorSpeed / __7SEG_MOTOR_POWER_NORMAL_MODE_RATIO), true);
-			Motor_SetSpeed(_MOTOR_MODE_REVARCE, _motorSpeed);
+			refMotorMode_not_PID = _MOTOR_MODE_REVARCE;
+			refMotorSpeed_not_PID = _motorSpeed;
 			break;
 
 		case COMMAND_NORMAL_NEUTRAL:
 			_7SegDisplay(__7SEG_MOTOR_MODE_NEUTRAL, false);
-			Motor_SetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+			refMotorMode_not_PID = _MOTOR_MODE_NEUTRAL;
+			refMotorSpeed_not_PID = 0;
 			break;
 
 		case COMMAND_NORMAL_BRAKE:
 			_7SegDisplay(__7SEG_MOTOR_MODE_BREAK, false);
-			Motor_SetSpeed(_MOTOR_MODE_BREAK, 0);
+			refMotorMode_not_PID = _MOTOR_MODE_BREAK;
+			refMotorSpeed_not_PID = 0;
 			break;
 		}
 	}else if(_command >= COMMAND_PID_FORWARD && _command <= COMMAND_PID_BRAKE && lastError != ERROR_EXCEED_INTEGRAL_MAX){	//PID Mode
@@ -448,9 +457,14 @@ void PID_MotorControl(__MOTOR_MODE _targetMode, uint16_t __targetValue){
 	}
 }
 
-uint16_t _Motor_Amplitude_Optimization(uint16_t _x){
-	double _y = pow((double)_x / pow(60000.0, 1.0/2.0), 2.0);
+uint16_t _Motor_Amplitude_Optimization(uint32_t _x){
+	double _y = pow((double)_x / pow(60000.0, 3.0/4.0), 4.0);
 	return (uint16_t)_y;
+}
+
+uint32_t _Re_Motor_Amplitude_Optimization(uint16_t _x){
+	double _y = pow(60000.0, 3.0/4.0)*pow((double)_x, 1.0/4.0);
+	return (uint32_t)_y;
 }
 
 void Motor_SetSpeed(const __MOTOR_MODE _targetMode, const uint16_t _targetSpeed){
@@ -462,7 +476,7 @@ void Motor_SetSpeed(const __MOTOR_MODE _targetMode, const uint16_t _targetSpeed)
 	}else if(_targetSpeed <= nowMotorSpeed){
 		nowMotorMode = _targetMode;
 		nowMotorSpeed = _targetSpeed;
-		nowMotorSpeedRef = _targetSpeed;
+		nowMotorSpeedRef = _Re_Motor_Amplitude_Optimization(_targetSpeed);
 		_MotorSetSpeed(nowMotorMode, nowMotorSpeed);
 		return;
 	}
@@ -480,7 +494,6 @@ void Motor_SetSpeed(const __MOTOR_MODE _targetMode, const uint16_t _targetSpeed)
 
 		if(nowMotorSpeed >= _targetSpeed){
 			nowMotorSpeed = _targetSpeed;
-			nowMotorSpeedRef = nowMotorSpeed;
 
 			_MotorSetSpeed(nowMotorMode, nowMotorSpeed);
 			return;
@@ -570,6 +583,8 @@ int main(void)
 
 		  if(PID_isEnable){
 			  PID_MotorControl(PID_nowMotorMode, PID_MotorValue);
+		  }else{
+			  Motor_SetSpeed(refMotorMode_not_PID, refMotorSpeed_not_PID);
 		  }
 
 		  _loopCheckCounter = 0;
