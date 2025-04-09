@@ -91,6 +91,7 @@ void _Init_RotaryEncoder();
 void _Init_PID();
 void _Init_CAN();
 void CommandIdentification(_COMMAND _command, uint8_t _data[]);
+void Motor_SetSpeed(__MOTOR_MODE _targetMode, uint16_t _targetSpeed);
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 /* USER CODE END EFP */
@@ -147,7 +148,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 #define COMMAND_DATA_SIZE 7
 
 #define PID_MAX_INTEGRAL_OF_DEBIATION 5000
-
+#define MOTOR_SPEED_AMPLITUDE (__MOTOR_MAX_SPEED / (100 / _CONTROL_LOOP_CYCLE))
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
