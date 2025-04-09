@@ -37,10 +37,15 @@ void _MotorInit(_MOTOR_SETTING *__MotorSetting){
 
 uint8_t _lastMode;
 void _MotorSetSpeed(__MOTOR_MODE _mode, uint16_t _speed){
-	if(_mode != _MOTOR_MODE_NEUTRAL && _mode != _lastMode){
-		_MotorSetSpeed(_MOTOR_MODE_NEUTRAL, 0);
+	if((_mode != _MOTOR_MODE_NEUTRAL) && (_mode != _lastMode)){
+		//NEUTRAL
+		__HAL_TIM_SET_COMPARE(_MotorSetting.__MotorP1_Tim, _MotorSetting.__MotorP1_TimChannel, 0);
+		HAL_GPIO_WritePin(_MotorSetting.__MotorN2_GpioPort, _MotorSetting.__MotorN2_Pin, GPIO_PIN_RESET);
+		__HAL_TIM_SET_COMPARE(_MotorSetting.__MotorP2_Tim, _MotorSetting.__MotorP2_TimChannel, 0);
+		HAL_GPIO_WritePin(_MotorSetting.__MotorN1_GpioPort, _MotorSetting.__MotorN1_Pin, GPIO_PIN_RESET);
 
-		__Delay_Microseconds(__MOTOR_DEAD_TIME);
+//		__Delay_Microseconds(__MOTOR_DEAD_TIME);
+		HAL_Delay(__MOTOR_DEAD_TIME);
 	}
 
 	switch(_mode){

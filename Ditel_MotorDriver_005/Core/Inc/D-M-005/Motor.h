@@ -17,7 +17,8 @@ typedef enum{
 	_MOTOR_MODE_REVARCE	= 0x03
 }__MOTOR_MODE;
 
-#define __MOTOR_DEAD_TIME ((uint16_t)((float)800 * 1.5))	//[us]
+//#define __MOTOR_DEAD_TIME ((uint16_t)((float)800 * 1.5))	//[us]
+#define __MOTOR_DEAD_TIME 10	//[ms]
 
 #define __MOTOR_MAX_SPEED	60000
 

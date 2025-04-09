@@ -2,6 +2,39 @@
 #include <mbed.h>
 #include "motorDriverController.hpp"    //コントロール用ヘッダファイルのインクルード
 
+// /*
+//TESTモードの例
+int main(void){
+    motorDriverSetup(); //モータードライバのセットアップ
+    
+    //正転でだんだん速くしていく
+    for(int i = 0; i < 60000; i+=4999){
+        normalMotorDriverRotate(0b0001, MOTOR_FORWARD, i);
+        ThisThread::sleep_for(100ms);
+    }
+
+    while(true){
+        for(int i = 0; i < 20000; i+=2000){
+            normalMotorDriverRotate(0b0001, MOTOR_FORWARD, i);
+            ThisThread::sleep_for(100ms);
+        }
+        for(int i = 0; i < 10; i++){
+            normalMotorDriverRotate(0b0001, MOTOR_FORWARD, 59999);
+            ThisThread::sleep_for(100ms);
+        }
+
+        for(int i = 0; i < 20000; i+=2000){
+            normalMotorDriverRotate(0b0001, MOTOR_REVERSAL, i);
+            ThisThread::sleep_for(100ms);
+        }
+        for(int i = 0; i < 10; i++){
+            normalMotorDriverRotate(0b0001, MOTOR_REVERSAL, 59999);
+            ThisThread::sleep_for(100ms);
+        }
+    }
+}
+// */
+
 /*
 //ノーマルモードの例
 int main(void){
@@ -40,7 +73,7 @@ int main(void){
 }
 */
 
-///*
+/*
 //PIDモードの例
 int main(void){
     motorDriverSetup(); //モータードライバのセットアップ
@@ -92,4 +125,4 @@ int main(void){
         }
     }
 }
-//*/
+*/
