@@ -148,7 +148,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 #define COMMAND_DATA_SIZE 7
 
 #define PID_MAX_INTEGRAL_OF_DEBIATION 5000
-#define MOTOR_SPEED_AMPLITUDE (__MOTOR_MAX_SPEED / (1000 / _CONTROL_LOOP_CYCLE))
+#define MOTOR_SPEED_AMPLITUDE (__MOTOR_MAX_SPEED / (500 / _CONTROL_LOOP_CYCLE))
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
